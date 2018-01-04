@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '@/components/Index'
 import About from '@/components/About'
+import Login from '@/components/Login'
 
 Vue.use(Router)
 
@@ -18,6 +19,12 @@ let router = new Router({
       name: 'About',
       meta: { title: 'About Liming' },
       component: About
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      meta: { title: '请登录' },
+      component: Login
     }
   ]
 })

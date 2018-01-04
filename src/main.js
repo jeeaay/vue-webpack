@@ -4,10 +4,16 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 
-import { Row, Col } from 'vant'
+import { Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup } from 'vant'
 
+Vue.use(Field)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Icon)
+Vue.use(Button)
+Vue.use(Switch)
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
 
 Vue.config.productionTip = false
 
