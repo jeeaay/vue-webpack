@@ -3,18 +3,22 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
-import { Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup } from 'vant'
+import { Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
 
 Vue.use(Field)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Field)
+Vue.use(Dialog)
 Vue.use(Icon)
+Vue.use(Popup)
+Vue.use(Cell)
+Vue.use(CellGroup)
+Vue.use(Pagination)
 Vue.use(Button)
 Vue.use(Switch)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
-
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

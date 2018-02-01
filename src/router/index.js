@@ -1,8 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '@/components/Index'
-import About from '@/components/About'
-import Login from '@/components/Login'
+import Index from '@/components/pages/Index'
+import Home from '@/components/common/Home'
+import Users from '@/components/pages/Users'
+import Cates from '@/components/pages/Cates'
+import Cases from '@/components/pages/Cases'
+import Info from '@/components/pages/Info'
+import Xiugai from '@/components/pages/Xiugai'
+// import About from '@/components/pages/About'
+import Login from '@/components/pages/Login'
 
 Vue.use(Router)
 
@@ -10,21 +16,21 @@ let router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Index',
-      meta: { title: 'Hello World!' },
-      component: Index
-    },
-    {
-      path: '/about',
-      name: 'About',
-      meta: { title: 'About Liming' },
-      component: About
-    },
-    {
-      path: '/login',
       name: 'Login',
-      meta: { title: '请登录' },
+      meta: { title: '请登录！' },
       component: Login
+    },
+    {
+      path: '/public',
+      component: Home,
+      children: [
+        {path: '/', component: Index, name: '首页', meta: { title: '案例采集后台管理' }},
+        {path: 'users', component: Users, name: '用户管理', meta: {title: '用户管理'}},
+        {path: 'category', component: Cates, name: '分类管理', meta: {title: '分类管理'}},
+        {path: 'cases', component: Cases, name: '案例管理', meta: {title: '案例管理'}},
+        {path: 'info', component: Info, name: '用户信息', meta: {title: '用户信息'}},
+        {path: 'xiugai', component: Xiugai, name: '修改密码', meta: {title: '修改密码'}}
+      ]
     }
   ]
 })
