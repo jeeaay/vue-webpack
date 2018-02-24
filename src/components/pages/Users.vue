@@ -11,24 +11,9 @@
       <h2>用户信息</h2>
       <div class="people">
         <van-row>
-          <van-col span="12">
+          <van-col span="12" v-for="(item,index) in users" :key="item.user_id" @click.native="openUserInfo(index)">
             <van-cell-group>
-              <van-cell title="用户1" is-link value="详细内容" @click="show = true" />
-            </van-cell-group>
-          </van-col>
-          <van-col span="12">
-            <van-cell-group>
-              <van-cell title="用户2" is-link value="详细内容" @click="show = true" />
-            </van-cell-group>
-          </van-col>
-          <van-col span="12">
-            <van-cell-group>
-              <van-cell title="用户1" is-link value="详细内容" @click="show = true" />
-            </van-cell-group>
-          </van-col>
-          <van-col span="12">
-            <van-cell-group>
-              <van-cell title="用户1" is-link value="详细内容" @click="show = true" />
+              <van-cell :title="item.user_name" is-link value="详细信息"/>
             </van-cell-group>
           </van-col>
         </van-row>
@@ -39,44 +24,44 @@
             <h2>详细信息：</h2>
             <van-row gutter="10">
               <van-col span="12">用户ID：</van-col>
-              <van-col span="12">1</van-col>
+              <van-col span="12">{{userInfo.user_id}}</van-col>
               <van-col span="12">用户名：</van-col>
               <van-col span="12">
-                <van-field v-model="newuser" icon="clear" @click-icon="newuser = ''" />
+                <van-field v-model="userInfo.user_name" icon="clear" @click-icon="userInfo.user_name = ''" />
               </van-col>
               <van-col span="12">用户真实信息：</van-col>
               <van-col span="12">
-                <van-field v-model="newpeople" icon="clear" @click-icon="newpeople = ''" />
+                <van-field v-model="userInfo.real_name" icon="clear" @click-icon="userInfo.real_name = ''" />
               </van-col>
               <van-col span="12">上次登录IP：</van-col>
-              <van-col span="12">192.168.7.1</van-col>
+              <van-col span="12">{{userInfo.last_login_ip ? userInfo.last_login_ip : '暂无'}}</van-col>
               <van-col span="24">
-                <van-button type="danger" style="float:right;margin-right:20px;">删除用户</van-button>
+                <van-button type="danger" style="float:right;margin-right:20px;" @click.native="deleteUser(userInfo.user_id)">删除用户</van-button>
               </van-col>
             </van-row>
           </div>
         </van-popup>
       </div>
-      <div class="pages">
+      <!-- <div class="pages">
         <van-pagination v-model="currentPage" :total-items="24" :items-per-page="5" />
-      </div>
+      </div> -->
     </div>
     <van-popup v-model="add" class="adduitem">
       <div class="addMaske">
         <h2>添加用户</h2>
         <van-row>
           <van-col span="24">
-            <van-field label="用户名" icon="clear" placeholder="请输入用户名" @click-icon="username = ''" />
+            <van-field label="用户名" icon="clear" placeholder="请输入用户名" v-model="addUser" @click-icon="username = ''" />
           </van-col>
           <van-col span="24">
-            <van-field type="password" label="密码" placeholder="请输入密码" />
+            <van-field type="password" label="密码" placeholder="请输入密码" v-model="addPassword"/>
           </van-col>
           <van-col span="24">
-            <van-field label="真实姓名" icon="clear" placeholder="请输入您的姓名" @click-icon="username = ''" />
+            <van-field label="真实姓名" icon="clear" placeholder="请输入您的姓名" v-model="addReal" @click-icon="username = ''" />
           </van-col>
           <van-col span="24">
             <van-button type="default" @click="add = false" style="margin-right: 20px;">取消</van-button>
-            <van-button type="primary" @click="onClickAlert,add = false">确认</van-button>
+            <van-button type="primary" @click="onClickAlert">确认</van-button>
           </van-col>
         </van-row>
       </div>
@@ -84,6 +69,8 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -92,11 +79,71 @@ export default {
       add: false,
       text: false,
       newuser: '昵称',
-      newpeople: '真实姓名'
+      newpeople: '真实姓名',
+      users: [],
+      userInfo: [],
+      addUser: '',
+      addPassword: '',
+      addReal: ''
+    }
+  },
+  mounted () {
+    if (localStorage.getItem('access_token')) {
+      var usertoken = localStorage.getItem('access_token')
+      var url = 'http://api.com/v1/user/?access_token='
+      axios.get(url + usertoken + '&page=1')
+      .then(response => {
+        let userArr = []
+        for (var i in response.data.data) {
+          userArr.push(response.data.data[i])
+        }
+        this.users = userArr
+      })
+    } else {
+      setTimeout(function () {
+        self.$router.push({
+          path: '/'
+        })
+      }, 100)
     }
   },
   methods: {
-
+    openUserInfo (index) {
+      this.show = true
+      this.userInfo = this.users[index]
+    },
+    onClickAlert () {
+      var usertoken = localStorage.getItem('access_token')
+      var url = 'http://api.com/v1/user/?access_token='
+      axios.post(url + usertoken, qs.stringify({
+        user_name: this.addUser,
+        passwd: this.addPassword,
+        real_name: this.addReal
+      }))
+      .then((response) => {
+        let newUser = {
+          user_id: response.data.data,
+          user_name: this.addUser,
+          real_name: this.addReal,
+          last_login_ip: ''
+        }
+        this.users.push(newUser)
+        this.add = false
+        // console.log(response)
+      })
+    },
+    deleteUser (id) {
+      // var usertoken = localStorage.getItem('access_token')
+      // var url = 'http://api.com/v1/user/?access_token='
+      // axios.post(url + usertoken)
+      // .then((response) => {
+      let index = this.users.findIndex(item => {
+        return item.user_id === id
+      })
+      this.users.splice(index, 1)
+      this.show = false
+      // })
+    }
   }
 }
 </script>

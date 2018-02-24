@@ -2,6 +2,8 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 import router from './router'
 import { Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
 
@@ -19,6 +21,7 @@ Vue.use(Button)
 Vue.use(Switch)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
+Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

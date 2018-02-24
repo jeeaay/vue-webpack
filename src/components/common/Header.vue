@@ -14,7 +14,7 @@
           <div class="headPortrait">
             <img src="../../assets/headportrait.jpg" alt="用户头像">
           </div>
-          <div class="userName">username</div>
+          <div class="userName">{{user}}</div>
           <div class="dropMenu">
             <div class="drop">
               <ul>
@@ -35,6 +35,8 @@ export default {
   data () {
     return {
       message: '案例采集管理后台',
+      user: '',
+      flag: true,
       items: [
         { name: '用户管理', description: '用户管理' },
         { name: '分类管理', description: '分类管理' },
@@ -44,6 +46,19 @@ export default {
         { name: '用户信息', description: '用户信息' },
         { name: '修改密码', description: '修改密码' }
       ]
+    }
+  },
+  mounted () {
+    const self = this
+    if (localStorage.getItem('real_name')) {
+      this.user = localStorage.getItem('real_name')
+    } else {
+      this.user = ''
+      setTimeout(function () {
+        self.$router.push({
+          path: '/'
+        })
+      }, 100)
     }
   }
 }

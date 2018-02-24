@@ -9,7 +9,7 @@
         <van-row>
           <van-checkbox v-model="checked">记住密码？</van-checkbox>
         </van-row>
-        <van-button type="primary" v-on:click="$router.push('/public')">提交</van-button>
+        <van-button type="primary" @click="login">提交</van-button>
         <van-button type="danger">取消</van-button>
       </van-cell-group>
     </div>
@@ -17,11 +17,54 @@
 </template>
 
 <script>
+import axios from 'axios'
+import qs from 'qs'
+import { Dialog } from 'vant'
 export default {
   data () {
     return {
       title: '请先登录',
-      checked: true
+      checked: true,
+      username: '',
+      password: ''
+    }
+  },
+  mounted () {},
+  methods: {
+    login: function () {
+      const self = this
+      if (this.username !== '' && this.password !== '') {
+        var url = 'http://api.com/v1/login'
+        axios.post(url, qs.stringify({
+          username: this.username,
+          password: this.password
+        }))
+        .then(response => {
+          console.log(response.data)
+          let responseData = response.data
+          localStorage.setItem('access_token', responseData.access_token)
+          localStorage.setItem('expires_time', responseData.time)
+          localStorage.setItem('real_name', responseData.real_name)
+          setTimeout(function () {
+            self.$router.push({
+              path: '/public/users'
+            })
+          }, 100)
+        })
+        .catch(error => {
+          Dialog.alert({
+            title: '冒个泡',
+            message: '用户名或者密码不正确'
+          }, error).then(() => {
+          })
+        })
+      } else {
+        Dialog.alert({
+          title: '冒个泡',
+          message: '请填写完整'
+        }).then(() => {
+        })
+      }
     }
   }
 }
