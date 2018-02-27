@@ -2,15 +2,15 @@
   <div class="header">
     <div class="container">
       <van-row class="top">
-        <van-col span="3" class="logoTitle">{{message}}</van-col>
-        <van-col span="18" class="menu">
+        <van-col span="4" class="logoTitle">{{message}}</van-col>
+        <van-col span="16" class="menu">
           <van-row class="menuList">
             <van-col span="8" v-for="item in items" :key="item.id">
               <router-link :to="{name:(item.name),params:{pageName:(item.description)}}">{{item.description}}</router-link>
             </van-col>
           </van-row>
         </van-col>
-        <van-col span="3" class="user">
+        <van-col span="4" class="user">
           <div class="headPortrait">
             <img src="../../assets/headportrait.jpg" alt="用户头像">
           </div>
@@ -18,9 +18,8 @@
           <div class="dropMenu">
             <div class="drop">
               <ul>
-                <li v-for="useritem in useritems" :key="useritem.id">
-                  <router-link :to="{name:(useritem.name),params:{pageName:(useritem.description)}}">{{useritem.description}}</router-link>
-                </li>
+                <li @click="met">修改密码</li>
+                <li @click="signOut">退出登录</li>
               </ul>
             </div>
           </div>
@@ -31,6 +30,7 @@
 </template>
 
 <script>
+import { Dialog } from 'vant'
 export default {
   data () {
     return {
@@ -41,10 +41,6 @@ export default {
         { name: '用户管理', description: '用户管理' },
         { name: '分类管理', description: '分类管理' },
         { name: '案例管理', description: '案例管理' }
-      ],
-      useritems: [
-        { name: '用户信息', description: '用户信息' },
-        { name: '修改密码', description: '修改密码' }
       ]
     }
   },
@@ -59,6 +55,24 @@ export default {
           path: '/'
         })
       }, 100)
+    }
+  },
+  methods: {
+    met: function () {
+      this.$router.push({
+        path: '/public/xiugai'
+      })
+    },
+    signOut: function () {
+      Dialog.confirm({
+        title: '提醒',
+        message: '确认退出？'
+      }).then(() => {
+        localStorage.clear()
+        this.$router.push({
+          path: '/'
+        })
+      })
     }
   }
 }
@@ -123,9 +137,6 @@ export default {
 }
 .drop ul li {
   line-height: 150%;
-}
-.drop ul li a {
-  display: block;
   text-align: center;
   padding: 15px 0;
   color: #48576a;

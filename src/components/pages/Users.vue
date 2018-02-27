@@ -1,3 +1,9 @@
+/*
+ * @Author: londy
+ * @Date: 2018-02-24 16:41:52
+ * @Last Modified by: hs.londy
+ * @Last Modified time: 2018-02-26 17:29:16
+ */
 <template>
   <div class="container content">
     <div class="bread">
@@ -42,16 +48,16 @@
           </div>
         </van-popup>
       </div>
-      <!-- <div class="pages">
+      <div class="pages">
         <van-pagination v-model="currentPage" :total-items="24" :items-per-page="5" />
-      </div> -->
+      </div>
     </div>
     <van-popup v-model="add" class="adduitem">
       <div class="addMaske">
         <h2>添加用户</h2>
         <van-row>
           <van-col span="24">
-            <van-field label="用户名" icon="clear" placeholder="请输入用户名" v-model="addUser" @click-icon="username = ''" />
+            <van-field label="用户名" icon="clear" id="adduser" placeholder="请输入用户名" v-model="addUser" @click-icon="username = ''" />
           </van-col>
           <van-col span="24">
             <van-field type="password" label="密码" placeholder="请输入密码" v-model="addPassword"/>
@@ -71,6 +77,7 @@
 <script>
 import axios from 'axios'
 import qs from 'qs'
+import { Dialog } from 'vant'
 export default {
   data () {
     return {
@@ -78,8 +85,8 @@ export default {
       show: false,
       add: false,
       text: false,
-      newuser: '昵称',
-      newpeople: '真实姓名',
+      newuser: '',
+      newpeople: '',
       users: [],
       userInfo: [],
       addUser: '',
@@ -121,28 +128,43 @@ export default {
         real_name: this.addReal
       }))
       .then((response) => {
-        let newUser = {
-          user_id: response.data.data,
-          user_name: this.addUser,
-          real_name: this.addReal,
-          last_login_ip: ''
+        console.log(response)
+        if (response.data.error) {
+          Dialog.alert({
+            title: '冒个泡',
+            message: '用户名已存在'
+          })
+          this.addUser = ''
+          console.log(response.data.error)
+        } else {
+          let newUser = {
+            user_id: response.data.data,
+            user_name: this.addUser,
+            real_name: this.addReal
+          }
+          this.users.push(newUser)
+          this.add = false
+          Dialog.alert({
+            title: '提醒',
+            message: '添加成功'
+          })
         }
-        this.users.push(newUser)
-        this.add = false
-        // console.log(response)
+      })
+      .catch((error) => {
+        console.log(error)
       })
     },
     deleteUser (id) {
-      // var usertoken = localStorage.getItem('access_token')
-      // var url = 'http://api.com/v1/user/?access_token='
-      // axios.post(url + usertoken)
-      // .then((response) => {
-      let index = this.users.findIndex(item => {
-        return item.user_id === id
+      var usertoken = localStorage.getItem('access_token')
+      var url = 'http://api.com/v1/user/10?access_token='
+      axios.post(url + usertoken)
+      .then((response) => {
+        let index = this.users.findIndex(item => {
+          return item.user_id === id
+        })
+        this.users.splice(index, 1)
+        this.show = false
       })
-      this.users.splice(index, 1)
-      this.show = false
-      // })
     }
   }
 }

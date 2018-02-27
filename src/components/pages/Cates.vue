@@ -1,3 +1,9 @@
+/*
+ * @Author: londy
+ * @Date: 2018-02-24 16:42:12
+ * @Last Modified by: hs.londy
+ * @Last Modified time: 2018-02-26 08:36:02
+ */
 <template>
   <div class="container content">
     <div class="bread">
@@ -9,24 +15,15 @@
     </div>
     <h2>分类列表</h2>
     <van-row class="catesList">
-      <van-col span="12">
-        <van-cell title="分类1" is-link value="编辑" @click="cateed = true"/>
-      </van-col>
-      <van-col span="12">
-        <van-cell title="分类2" is-link value="编辑" @click="cateed = true"/>
-      </van-col>
-      <van-col span="12">
-        <van-cell title="分类3" is-link value="编辑" @click="cateed = true"/>
-      </van-col>
-      <van-col span="12">
-        <van-cell title="分类4" is-link value="编辑" @click="cateed = true"/>
+      <van-col span="12" v-for="(cate,index) in cates" :key="cate.cate_id" @click.native="modCaseInfo(index)">
+        <van-cell :title="cate.cate_name" is-link value="编辑" @click="cateed = true"/>
       </van-col>
     </van-row>
-    <div class="pages">
+    <!-- <div class="pages">
       <van-pagination v-model="currentPage" :total-items="24" :items-per-page="5" />
-    </div>
+    </div> -->
     <van-popup v-model="addCate" class="addcate">
-      <h2>添加用户</h2>
+      <h2>添加分类</h2>
       <van-row>
         <van-col span="24">
           <van-field label="分类名称：" placeholder="请输入分类名称" />
@@ -45,7 +42,7 @@
           <van-field label="分类名称：" value="修改分类名称" icon="clear" @click-icon="username = ''"/>
           <van-field label="分类描述：" type="textarea" value="修改分类描述" icon="clear" rows="1" autosize @click-icon="username = ''"/>
         </van-col>
-        <van-col span="24">
+        <van-col span="24" class="marginMid">
           <van-button type="default" @click="cateb = false" style="margin-right: 20px;">取消</van-button>
           <van-button type="danger" @click="cateb = false">删除</van-button>
         </van-col>
@@ -54,14 +51,76 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
+// import qs from 'qs'
 export default {
   data () {
     return {
       currentPage: true,
       addCate: false,
-      cateed: false
+      cateed: false,
+      cates: []
+    }
+  },
+  mounted () {
+    if (localStorage.getItem('access_token')) {
+      var usertoken = localStorage.getItem('access_token')
+      var url = 'http://api.com/v1/cate/?access_token='
+      axios.get(url + usertoken + '&page=1')
+      .then(response => {
+        console.log(response.data)
+        let cateArr = []
+        for (var i in response.data.data) {
+          cateArr.push(response.data.data[i])
+        }
+        this.cates = cateArr
+      })
+    } else {
+      setTimeout(function () {
+        self.$router.push({
+          path: '/'
+        })
+      }, 100)
     }
   }
+  // methods: {
+  //   openUserInfo (index) {
+  //     this.show = true
+  //     this.userInfo = this.users[index]
+  //   },
+  //   onClickAlert () {
+  //     var usertoken = localStorage.getItem('access_token')
+  //     var url = 'http://api.com/v1/user/?access_token='
+  //     axios.post(url + usertoken, qs.stringify({
+  //       user_name: this.addUser,
+  //       passwd: this.addPassword,
+  //       real_name: this.addReal
+  //     }))
+  //     .then((response) => {
+  //       let newUser = {
+  //         user_id: response.data.data,
+  //         user_name: this.addUser,
+  //         real_name: this.addReal,
+  //         last_login_ip: ''
+  //       }
+  //       this.users.push(newUser)
+  //       this.add = false
+  //       // console.log(response)
+  //     })
+  //   },
+  //   deleteUser (id) {
+  //     // var usertoken = localStorage.getItem('access_token')
+  //     // var url = 'http://api.com/v1/user/?access_token='
+  //     // axios.post(url + usertoken)
+  //     // .then((response) => {
+  //     let index = this.users.findIndex(item => {
+  //       return item.user_id === id
+  //     })
+  //     this.users.splice(index, 1)
+  //     this.show = false
+  //     // })
+  //   }
+  // }
 }
 </script>
 
@@ -71,6 +130,9 @@ export default {
   font-size: 16px;
   vertical-align: middle;
   margin-right: 6px;
+}
+.marginMid{
+  padding-top: 10px;
 }
 .catesList .van-col {
   margin-bottom: 10px;

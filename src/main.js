@@ -24,6 +24,43 @@ Vue.use(CheckboxGroup)
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 
+// axios 配置
+axios.defaults.timeout = 5000
+axios.defaults.baseURL = 'http://api.com/'
+
+// // http request 拦截器
+// axios.interceptors.request.use(
+//   config => {
+//     let token = localStorage.getItem('access_token')
+//     if (token) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
+//       config.headers.Authorization = token
+//     }
+//     return config
+//   },
+//   err => {
+//     return Promise.reject(err)
+//   })
+
+// http response 拦截器
+axios.interceptors.response.use(
+  response => {
+    return response
+  },
+  error => {
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          // 401 清除token信息并跳转到登录页面
+          localStorage.clear()
+          router.replace({
+            path: '/',
+            query: { redirect: router.currentRoute.fullPath }
+          })
+      }
+    }
+    return Promise.reject(error.response.data)
+  })
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
