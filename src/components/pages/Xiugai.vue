@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-26 09:30:38
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-27 13:48:44
+ * @Last Modified time: 2018-02-27 15:48:10
  */
 
 <template>
@@ -11,10 +11,10 @@
       <h1 class="logonTitle">{{ title }}</h1>
       <van-cell-group class="">
         <van-field v-model="user" label="用户名" />
-        <van-field v-model="oldPassword" type="password" label="旧密码" disabled="disabled"/>
+        <van-field v-model="oldPassword" type="password" label="旧密码" placeholder="请输入旧密码"/>
         <van-field v-model="newPassword" type="password" label="新密码" placeholder="请输入新密码" />
-        <van-button type="primary" @click.native="modify">提交</van-button>
-        <van-button type="danger" @click="goback">取消</van-button>
+        <van-button type="primary" @click="modify">提交</van-button>
+        <van-button type="danger" @click="goback">返回上一级</van-button>
       </van-cell-group>
     </div>
   </div>
@@ -28,13 +28,18 @@ export default {
   data () {
     return {
       title: '修改密码',
-      oldPassword: '123456',
+      oldPassword: '',
       newPassword: '',
       user: ''
     }
   },
   mounted () {
     const self = this
+    var usertoken = localStorage.getItem('access_token')
+    var url = 'http://api.com/v1/user/1?access_token='
+    axios.post(url + usertoken, qs.stringify({
+
+    }))
     if (localStorage.getItem('real_name')) {
       this.user = localStorage.getItem('real_name')
     } else {
@@ -48,45 +53,32 @@ export default {
   },
   methods: {
     modify: function () {
-      Dialog.confirm({
-        title: '冒个泡',
-        message: '是否确定？'
-      }).then(() => {
-        const self = this
-        if (this.username !== '' && this.password !== '') {
-          var url = 'http://api.com/v1/login'
-          axios
-            .post(
-              url,
-              qs.stringify({
-                password: this.password
-              })
-            )
-            .then(response => {
-              console.log(response.data)
-              setTimeout(function () {
-                self.$router.push({
-                  path: '/public/users'
-                })
-              }, 100)
-            }, (response) => {
-              Dialog.alert({
-                title: '冒个泡',
-                message: '登录超时请重新登录'
-              })
-              this.$router.push({
-                path: '/'
-              })
-            })
-        } else {
+      if (this.newPassword !== '') {
+        var usertoken = localStorage.getItem('access_token')
+        let userID = localStorage.getItem('userID')
+        var url = 'http://api.com/v1/user/' + userID + '?access_token='
+        axios.post(url + usertoken, qs.stringify({
+          old_passwd: this.oldPassword,
+          new_passwd: this.newPassword
+        }))
+        // .then(response => {
+        // })
+        .catch(error => {
           Dialog.alert({
             title: '冒个泡',
-            message: '请填写完整'
-          }).then(() => {})
-        }
-      }).catch(() => {
-          // on cancel
-      })
+            message: '您的旧密码不正确！'
+          }, error).then(() => {
+            this.oldPassword = ''
+            this.newPassword = ''
+          })
+        })
+      } else {
+        Dialog.alert({
+          title: '冒个泡',
+          message: '请填写完整！'
+        }).then(() => {
+        })
+      }
     },
     goback: function () {
       Dialog.confirm({

@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-26 10:46:07
+ * @Last Modified time: 2018-02-27 15:36:43
  */
 <template>
   <div class="containerWrap">
@@ -50,6 +50,7 @@ export default {
           let responseData = response.data
           localStorage.setItem('access_token', responseData.access_token)
           localStorage.setItem('expires_time', responseData.time)
+          localStorage.setItem('userID', responseData.user_id)
           localStorage.setItem('real_name', responseData.real_name)
           setTimeout(function () {
             self.$router.push({

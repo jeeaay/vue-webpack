@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:41:52
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-27 13:43:57
+ * @Last Modified time: 2018-02-27 15:17:15
  */
 <template>
   <div class="container content">
@@ -169,7 +169,7 @@ export default {
     },
     deleteUser (id) {
       var usertoken = localStorage.getItem('access_token')
-      var url = 'http://api.com/v1/user/10?access_token='
+      var url = 'http://api.com/v1/user/' + id + '?access_token='
       axios.post(url + usertoken)
       .then((response) => {
         let index = this.users.findIndex(item => {
