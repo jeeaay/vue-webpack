@@ -42,24 +42,24 @@ axios.defaults.baseURL = 'http://api.com/'
 //   })
 
 // http response 拦截器
-axios.interceptors.response.use(
-  response => {
-    return response
-  },
-  error => {
-    if (error.response) {
-      switch (error.response.status) {
-        case 401:
-          // 401 清除token信息并跳转到登录页面
-          localStorage.clear()
-          router.replace({
-            path: '/',
-            query: { redirect: router.currentRoute.fullPath }
-          })
-      }
-    }
-    return Promise.reject(error.response.data)
-  })
+// axios.interceptors.response.use(
+//   response => {
+//     return response
+//   },
+//   error => {
+//     if (error.response) {
+//       switch (error.response.status) {
+//         case 401:
+//           // 401 清除token信息并跳转到登录页面
+//           localStorage.clear()
+//           router.replace({
+//             path: '/',
+//             query: { redirect: router.currentRoute.fullPath }
+//           })
+//       }
+//     }
+//     return Promise.reject(error.response.data)
+//   })
 
 /* eslint-disable no-new */
 new Vue({

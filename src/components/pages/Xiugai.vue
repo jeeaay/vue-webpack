@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-26 09:30:38
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-27 09:43:40
+ * @Last Modified time: 2018-02-27 13:48:44
  */
 
 <template>
@@ -69,6 +69,14 @@ export default {
                   path: '/public/users'
                 })
               }, 100)
+            }, (response) => {
+              Dialog.alert({
+                title: '冒个泡',
+                message: '登录超时请重新登录'
+              })
+              this.$router.push({
+                path: '/'
+              })
             })
         } else {
           Dialog.alert({

@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-26 08:36:02
+ * @Last Modified time: 2018-02-27 13:46:46
  */
 <template>
   <div class="container content">
@@ -52,6 +52,7 @@
 </template>
 <script>
 import axios from 'axios'
+import { Dialog } from 'vant'
 // import qs from 'qs'
 export default {
   data () {
@@ -74,6 +75,14 @@ export default {
           cateArr.push(response.data.data[i])
         }
         this.cates = cateArr
+      }, (response) => {
+        Dialog.alert({
+          title: '冒个泡',
+          message: '登录超时请重新登录'
+        })
+        this.$router.push({
+          path: '/'
+        })
       })
     } else {
       setTimeout(function () {

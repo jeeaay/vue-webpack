@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:41:52
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-26 17:29:16
+ * @Last Modified time: 2018-02-27 13:43:57
  */
 <template>
   <div class="container content">
@@ -105,6 +105,14 @@ export default {
           userArr.push(response.data.data[i])
         }
         this.users = userArr
+      }, (response) => {
+        Dialog.alert({
+          title: '冒个泡',
+          message: '登录超时请重新登录'
+        })
+        this.$router.push({
+          path: '/'
+        })
       })
     } else {
       setTimeout(function () {
@@ -149,6 +157,11 @@ export default {
             message: '添加成功'
           })
         }
+      }, (response) => {
+        console.log('error')
+        this.$router.push({
+          path: '/'
+        })
       })
       .catch((error) => {
         console.log(error)
