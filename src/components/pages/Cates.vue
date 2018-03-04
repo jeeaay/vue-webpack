@@ -27,11 +27,10 @@
       <van-row>
         <van-col span="24">
           <van-field label="分类名称：" placeholder="请输入分类名称" />
-          <van-field label="分类描述：" type="textarea" placeholder="请输入分类描述" rows="1" autosize />
         </van-col>
         <van-col span="24">
-          <van-button type="default" @click="add = false" style="margin-right: 20px;">取消</van-button>
-          <van-button type="primary" @click="onClickAlert,add = false">确认</van-button>
+          <van-button type="default" @click="addCate = false" style="margin-right: 20px;">取消</van-button>
+          <van-button type="primary" @click.native="onClickCate()">确认</van-button>
         </van-col>
       </van-row>
     </van-popup>

@@ -33,7 +33,7 @@
               <van-col span="12">{{userInfo.user_id}}</van-col>
               <van-col span="12">用户名：</van-col>
               <van-col span="12">
-                <van-field v-model="userInfo.user_name" icon="clear" @click-icon="userInfo.user_name = ''" />
+                <van-field v-model="userInfo.user_name" icon="clear" @click.native="onFocus(userInfo.user_id)" @click-icon="userInfo.user_name = ''" />
               </van-col>
               <van-col span="12">用户真实信息：</van-col>
               <van-col span="12">
@@ -177,6 +177,21 @@ export default {
         })
         this.users.splice(index, 1)
         this.show = false
+      })
+    },
+    onFocus (id) {
+      var usertoken = localStorage.getItem('access_token')
+      var url = 'http://api.com/v1/user/' + id + '?access_token='
+      axios.post(url + usertoken, qs.stringify({
+        user_name: this.userInfo.user_name
+      }))
+      .catch(error => {
+        Dialog.alert({
+          title: '冒个泡',
+          message: '修改失败！'
+        }, error).then(() => {
+
+        })
       })
     }
   }
