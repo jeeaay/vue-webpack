@@ -48,10 +48,12 @@ let router = new Router({
 
 router.beforeEach((to, from, next) => {
   let token = localStorage.getItem('access_token')
+  let nowTime = new Date()
   if (to.matched.some(r => r.meta.requireAuth)) {
-    if (token) {
+    if (token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000)) {
       next()
     } else {
+      localStorage.clear()
       next({
         path: '/',
         query: { redirect: to.fullPath }
