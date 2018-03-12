@@ -1,8 +1,8 @@
 /*
  * @Author: londy
  * @Date: 2018-02-24 16:41:52
- * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-27 17:03:40
+ * @Last Modified by: Jeay
+ * @Last Modified time: 2018-03-12 17:18:20
  */
 <template>
   <div class="container content">
@@ -33,7 +33,7 @@
               <van-col span="12">{{userInfo.user_id}}</van-col>
               <van-col span="12">用户名：</van-col>
               <van-col span="12">
-                <van-field v-model="userInfo.user_name" icon="clear" @click.native="onFocus(userInfo.user_id)" @click-icon="userInfo.user_name = ''" />
+                <van-field v-model="userInfo.user_name" icon="clear" @keyup="onKeyup(userInfo.user_id)" @click-icon="userInfo.user_name = ''" />
               </van-col>
               <van-col span="12">用户真实信息：</van-col>
               <van-col span="12">
@@ -49,7 +49,7 @@
         </van-popup>
       </div>
       <div class="pages">
-        <van-pagination v-model="currentPage" :total-items="24" :items-per-page="5" />
+        <van-pagination @change="onChange" v-model="currentPage" :total-items="totalUser" :items-per-page="10" />
       </div>
     </div>
     <van-popup v-model="add" class="adduitem">
@@ -78,10 +78,24 @@
 import axios from 'axios'
 import qs from 'qs'
 import { Dialog } from 'vant'
+
+let GetUserList = (currentPage) => {
+  return new Promise((resolve, reject) => {
+    if (localStorage.getItem('access_token')) {
+      let usertoken = localStorage.getItem('access_token')
+      let url = 'user/?access_token=' + usertoken + '&page=' + currentPage
+      axios.get(url)
+      .then(response => {
+        resolve(response.data.data)
+      })
+    }
+  })
+}
+
 export default {
   data () {
     return {
-      currentPage: true,
+      currentPage: 1,
       show: false,
       add: false,
       text: false,
@@ -91,108 +105,77 @@ export default {
       userInfo: [],
       addUser: '',
       addPassword: '',
+      totalUser: 0,
       addReal: ''
     }
   },
-  mounted () {
-    if (localStorage.getItem('access_token')) {
-      var usertoken = localStorage.getItem('access_token')
-      var url = 'http://api.com/v1/user/?access_token='
-      axios.get(url + usertoken + '&page=1')
-      .then(response => {
-        let userArr = []
-        for (var i in response.data.data) {
-          userArr.push(response.data.data[i])
-        }
-        this.users = userArr
-      }, (response) => {
-        Dialog.alert({
-          title: '冒个泡',
-          message: '登录超时请重新登录'
-        })
-        this.$router.push({
-          path: '/'
-        })
-      })
-    } else {
-      setTimeout(function () {
-        self.$router.push({
-          path: '/'
-        })
-      }, 100)
-    }
+  async mounted () {
+    let data = await GetUserList(this.currentPage)
+    this.users = data.userList
+    this.totalUser = data.totalUser
   },
   methods: {
+    async onChange () {
+      let data = await GetUserList(this.currentPage)
+      this.users = data.userList
+      this.totalUser = data.totalUser
+    },
     openUserInfo (index) {
       this.show = true
       this.userInfo = this.users[index]
+      console.log(this.users[index])
     },
     onClickAlert () {
-      var usertoken = localStorage.getItem('access_token')
-      var url = 'http://api.com/v1/user/?access_token='
-      axios.post(url + usertoken, qs.stringify({
-        user_name: this.addUser,
-        passwd: this.addPassword,
-        real_name: this.addReal
-      }))
-      .then((response) => {
-        console.log(response)
-        if (response.data.error) {
-          Dialog.alert({
-            title: '冒个泡',
-            message: '用户名已存在'
-          })
-          this.addUser = ''
-          console.log(response.data.error)
-        } else {
-          let newUser = {
-            user_id: response.data.data,
-            user_name: this.addUser,
-            real_name: this.addReal
+      let url = 'user/?access_token=' + localStorage.getItem('access_token')
+      if (this.addUser !== '') {
+        axios.post(url, qs.stringify({
+          user_name: this.addUser,
+          passwd: this.addPassword,
+          real_name: this.addReal
+        }))
+        .then((response) => {
+          if (response.data.error) {
+            Dialog.alert({
+              title: '添加用户失败',
+              message: response.data.message
+            })
+          } else {
+            Dialog.alert({
+              title: '添加成功',
+              message: '用户' + this.addReal + '添加成功'
+            }).then(() => {
+              this.$router.go(0)
+            })
           }
-          this.users.push(newUser)
-          this.add = false
-          Dialog.alert({
-            title: '提醒',
-            message: '添加成功'
-          })
-        }
-      }, (response) => {
-        console.log('error')
-        this.$router.push({
-          path: '/'
         })
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+      } else {
+        Dialog.alert({
+          title: '错误',
+          message: '请填写用户名'
+        })
+      }
     },
     deleteUser (id) {
-      var usertoken = localStorage.getItem('access_token')
-      var url = 'http://api.com/v1/user/' + id + '?access_token='
-      axios.post(url + usertoken)
-      .then((response) => {
-        let index = this.users.findIndex(item => {
-          return item.user_id === id
+      let url = 'user/' + id + '?access_token=' + localStorage.getItem('access_token')
+      axios.delete(url)
+        .then((response) => {
+          Dialog.alert({
+            title: '删除成功',
+            message: response.data.data
+          }).then(() => {
+            this.$router.go(0)
+          })
         })
-        this.users.splice(index, 1)
-        this.show = false
-      })
     },
-    onFocus (id) {
-      var usertoken = localStorage.getItem('access_token')
-      var url = 'http://api.com/v1/user/' + id + '?access_token='
-      axios.post(url + usertoken, qs.stringify({
-        user_name: this.userInfo.user_name
-      }))
-      .catch(error => {
-        Dialog.alert({
-          title: '冒个泡',
-          message: '修改失败！'
-        }, error).then(() => {
-
-        })
-      })
+    onKeyup (id) {
+      let url = 'user/' + id + '?access_token=' + localStorage.getItem('access_token')
+      clearTimeout(window.t)
+      window.t = setTimeout(() => {
+        axios.put(url, qs.stringify({
+          user_name: this.userInfo.user_name,
+          real_name: this.userInfo.real_name
+        }))
+      }, 500)
     }
   }
 }
