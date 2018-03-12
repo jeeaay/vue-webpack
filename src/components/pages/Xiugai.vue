@@ -1,8 +1,8 @@
 /*
  * @Author: londy
  * @Date: 2018-02-26 09:30:38
- * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-27 15:48:10
+ * @Last Modified by: Jeay
+ * @Last Modified time: 2018-03-12 17:30:05
  */
 
 <template>
@@ -34,7 +34,7 @@ export default {
     }
   },
   mounted () {
-    const self = this
+/*     const self = this
     var usertoken = localStorage.getItem('access_token')
     var url = 'http://api.com/v1/user/1?access_token='
     axios.post(url + usertoken, qs.stringify({
@@ -49,29 +49,16 @@ export default {
           path: '/'
         })
       }, 100)
-    }
+    } */
   },
   methods: {
     modify: function () {
       if (this.newPassword !== '') {
-        var usertoken = localStorage.getItem('access_token')
-        let userID = localStorage.getItem('userID')
-        var url = 'http://api.com/v1/user/' + userID + '?access_token='
-        axios.post(url + usertoken, qs.stringify({
+        let url = 'http://api.com/v1/user/' + localStorage.getItem('userID') + '?access_token=' + localStorage.getItem('access_token')
+        axios.put(url + usertoken, qs.stringify({
           old_passwd: this.oldPassword,
           new_passwd: this.newPassword
         }))
-        // .then(response => {
-        // })
-        .catch(error => {
-          Dialog.alert({
-            title: '冒个泡',
-            message: '您的旧密码不正确！'
-          }, error).then(() => {
-            this.oldPassword = ''
-            this.newPassword = ''
-          })
-        })
       } else {
         Dialog.alert({
           title: '冒个泡',
