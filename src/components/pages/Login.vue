@@ -1,8 +1,8 @@
 /*
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
- * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-27 15:36:43
+ * @Last Modified by: Jeay
+ * @Last Modified time: 2018-03-12 17:09:33
  */
 <template>
   <div class="containerWrap">
@@ -35,7 +35,9 @@ export default {
       password: ''
     }
   },
-  mounted () {},
+  mounted () {
+    
+  },
   methods: {
     login: function () {
       const self = this
@@ -59,18 +61,10 @@ export default {
           }, 100)
         })
         .catch(error => {
-          Dialog.alert({
-            title: '冒个泡',
-            message: '用户名或者密码不正确'
-          }, error).then(() => {
-          })
+          console.log(error)
         })
       } else {
-        Dialog.alert({
-          title: '冒个泡',
-          message: '请填写完整'
-        }).then(() => {
-        })
+        console.log(error)
       }
     }
   }
@@ -87,9 +81,8 @@ export default {
 .loginForm {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 16%;
   margin-left: -275px;
-  margin-top: -160px;
   border-radius: 5px;
   -moz-border-radius: 5px;
   padding: 20px 35px;
