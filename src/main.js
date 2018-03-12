@@ -26,40 +26,71 @@ Vue.config.productionTip = false
 
 // axios 配置
 axios.defaults.timeout = 5000
-axios.defaults.baseURL = 'http://api.com/'
+axios.defaults.baseURL = 'http://api.com/v1/'
 
 // // http request 拦截器
-// axios.interceptors.request.use(
-//   config => {
-//     let token = localStorage.getItem('access_token')
-//     if (token) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
-//       config.headers.Authorization = token
-//     }
-//     return config
-//   },
-//   err => {
-//     return Promise.reject(err)
-//   })
+/* axios.interceptors.request.use(
+  config => {
+    let token = localStorage.getItem('access_token')
+    let nowTime = new Date()
+    if ( token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000) ) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
+      config.headers.Authorization = token
+    }
+    return config
+  },
+  err => {
+    return Promise.reject(err)
+  }) */
 
 // http response 拦截器
-// axios.interceptors.response.use(
-//   response => {
-//     return response
-//   },
-//   error => {
-//     if (error.response) {
-//       switch (error.response.status) {
-//         case 401:
-//           // 401 清除token信息并跳转到登录页面
-//           localStorage.clear()
-//           router.replace({
-//             path: '/',
-//             query: { redirect: router.currentRoute.fullPath }
-//           })
-//       }
-//     }
-//     return Promise.reject(error.response.data)
-//   })
+axios.interceptors.response.use(
+  response => {
+    if (response.data.error) {
+      switch (response.data.error) {
+        case 401:
+          Dialog.alert({
+            title: '401 Error: 鉴权失败',
+            message: response.data.message
+          }).then(() => {
+            localStorage.clear()
+            router.replace({
+              path: '/',
+              query: { redirect: router.currentRoute.fullPath }
+            })
+          })
+          break
+        case 404:
+          // 401 清除token信息并跳转到登录页面
+          Dialog.alert({
+            title: '404 Error: 页面不存在',
+            message: response.data.message
+          }).then(() => {
+            router.go(-1)
+          })
+          break
+        default:
+          Dialog.alert({
+            title: 'Error',
+            message: response.data.message
+          })
+      }
+    }
+    return response
+  },
+  error => {
+    Dialog.alert({
+      title: 'Error',
+      message: '请重新登录'
+    }).then(() => {
+      localStorage.clear()
+      router.replace({
+        path: '/',
+        query: { redirect: router.currentRoute.fullPath }
+      })
+    })
+    return Promise.reject(error)
+  }
+)
 
 /* eslint-disable no-new */
 new Vue({
