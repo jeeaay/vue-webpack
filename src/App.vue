@@ -8,7 +8,7 @@
 </template>
 
 <script>
-require('./assets/test.sass')
+require('./assets/style.sass')
 export default {
   name: 'app'
 }
