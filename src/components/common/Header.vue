@@ -1,8 +1,8 @@
 /*
  * @Author: londy
  * @Date: 2018-02-27 15:31:52
- * @Last Modified by:   hs.londy
- * @Last Modified time: 2018-02-27 15:31:52
+ * @Last Modified by: Jeay
+ * @Last Modified time: 2018-03-12 17:22:11
  */
 <template>
   <div class="header">
@@ -131,11 +131,9 @@ export default {
 .dropMenu {
   position: absolute;
   width: 100%;
-  height: atuo;
   top: -200px;
   left: 0;
-  padding-top: 10px;
-  z-index: -1;
+  z-index: 1;
 }
 .drop {
   border: 1px solid #d1dbe5;
