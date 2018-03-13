@@ -79,8 +79,8 @@ axios.interceptors.response.use(
   },
   error => {
     Dialog.alert({
-      title: 'Error',
-      message: '请重新登录'
+      title: '未知错误',
+      message: '请检查网络，尝试重新登录'
     }).then(() => {
       localStorage.clear()
       router.replace({
