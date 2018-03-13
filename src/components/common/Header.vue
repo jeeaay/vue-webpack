@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-27 15:31:52
  * @Last Modified by: Jeay
- * @Last Modified time: 2018-03-12 17:22:11
+ * @Last Modified time: 2018-03-13 08:53:31
  */
 <template>
   <div class="header">
@@ -85,6 +85,9 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.header {
+  z-index: 1;
+}
 .header .top {
   height: 100%;
   line-height: 70px;
