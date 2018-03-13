@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: Jeay
- * @Last Modified time: 2018-03-12 17:09:33
+ * @Last Modified time: 2018-03-13 09:46:37
  */
 <template>
   <div class="containerWrap">
@@ -35,36 +35,39 @@ export default {
       password: ''
     }
   },
-  mounted () {
-    
-  },
+  mounted () {},
   methods: {
     login: function () {
       const self = this
       if (this.username !== '' && this.password !== '') {
-        var url = 'http://api.com/v1/login'
-        axios.post(url, qs.stringify({
+        axios.post('login', qs.stringify({
           username: this.username,
           password: this.password
         }))
         .then(response => {
-          console.log(response.data)
-          let responseData = response.data
-          localStorage.setItem('access_token', responseData.access_token)
-          localStorage.setItem('expires_time', responseData.time)
-          localStorage.setItem('userID', responseData.user_id)
-          localStorage.setItem('real_name', responseData.real_name)
-          setTimeout(function () {
-            self.$router.push({
-              path: '/public/users'
+          if (response.data.error) {
+            Dialog.alert({
+              title: '登录失败',
+              message: response.data.message
             })
-          }, 100)
-        })
-        .catch(error => {
-          console.log(error)
+          } else {
+            let responseData = response.data
+            localStorage.setItem('access_token', responseData.access_token)
+            localStorage.setItem('expires_time', responseData.time)
+            localStorage.setItem('userID', responseData.user_id)
+            localStorage.setItem('real_name', responseData.real_name)
+            setTimeout(function () {
+              self.$router.push({
+                path: '/public/users'
+              })
+            }, 100)
+          }
         })
       } else {
-        console.log(error)
+        Dialog.alert({
+          title: '登录失败',
+          message: '请填写用户名和密码'
+        })
       }
     }
   }

@@ -25,7 +25,7 @@ Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 
 // axios 配置
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 2000
 axios.defaults.baseURL = 'http://api.com/v1/'
 
 // // http request 拦截器
@@ -33,15 +33,15 @@ axios.defaults.baseURL = 'http://api.com/v1/'
   config => {
     let token = localStorage.getItem('access_token')
     let nowTime = new Date()
-    if ( token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000) ) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
+    if (token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000)) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
       config.headers.Authorization = token
     }
     return config
   },
   err => {
     return Promise.reject(err)
-  }) */
-
+  })
+ */
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
@@ -78,9 +78,10 @@ axios.interceptors.response.use(
     return response
   },
   error => {
+    console.log(error.response)
     Dialog.alert({
-      title: '未知错误',
-      message: '请检查网络，尝试重新登录'
+      title: '错误',
+      message: '请重新登录'
     }).then(() => {
       localStorage.clear()
       router.replace({
