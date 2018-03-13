@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:41:52
  * @Last Modified by: Jeay
- * @Last Modified time: 2018-03-12 17:18:20
+ * @Last Modified time: 2018-03-13 09:36:19
  */
 <template>
   <div class="container content">
@@ -33,11 +33,11 @@
               <van-col span="12">{{userInfo.user_id}}</van-col>
               <van-col span="12">用户名：</van-col>
               <van-col span="12">
-                <van-field v-model="userInfo.user_name" icon="clear" @keyup="onKeyup(userInfo.user_id)" @click-icon="userInfo.user_name = ''" />
+                <van-field v-model="userInfo.user_name" @keyup="onKeyup(userInfo.user_id)" @click-icon="userInfo.user_name = ''" />
               </van-col>
               <van-col span="12">用户真实信息：</van-col>
               <van-col span="12">
-                <van-field v-model="userInfo.real_name" icon="clear" @click-icon="userInfo.real_name = ''" />
+                <van-field v-model="userInfo.real_name" @click-icon="userInfo.real_name = ''" />
               </van-col>
               <van-col span="12">上次登录IP：</van-col>
               <van-col span="12">{{userInfo.last_login_ip ? userInfo.last_login_ip : '暂无'}}</van-col>
@@ -171,10 +171,12 @@ export default {
       let url = 'user/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
-        axios.put(url, qs.stringify({
-          user_name: this.userInfo.user_name,
-          real_name: this.userInfo.real_name
-        }))
+        if (this.userInfo.user_name !== '' && this.userInfo.real_name !== '') {
+          axios.put(url, qs.stringify({
+            user_name: this.userInfo.user_name,
+            real_name: this.userInfo.real_name
+          }))
+        }
       }, 500)
     }
   }
