@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-26 09:30:38
  * @Last Modified by: Jeay
- * @Last Modified time: 2018-03-12 17:30:05
+ * @Last Modified time: 2018-03-13 09:37:05
  */
 
 <template>
@@ -10,7 +10,7 @@
     <div class="loginForm">
       <h1 class="logonTitle">{{ title }}</h1>
       <van-cell-group class="">
-        <van-field v-model="user" label="用户名" />
+        <van-field disabled v-model="user" label="用户名" />
         <van-field v-model="oldPassword" type="password" label="旧密码" placeholder="请输入旧密码"/>
         <van-field v-model="newPassword" type="password" label="新密码" placeholder="请输入新密码" />
         <van-button type="primary" @click="modify">提交</van-button>
@@ -30,40 +30,36 @@ export default {
       title: '修改密码',
       oldPassword: '',
       newPassword: '',
-      user: ''
+      user: localStorage.getItem('real_name')
     }
   },
   mounted () {
-/*     const self = this
-    var usertoken = localStorage.getItem('access_token')
-    var url = 'http://api.com/v1/user/1?access_token='
-    axios.post(url + usertoken, qs.stringify({
-
-    }))
-    if (localStorage.getItem('real_name')) {
-      this.user = localStorage.getItem('real_name')
-    } else {
-      this.user = ''
-      setTimeout(function () {
-        self.$router.push({
-          path: '/'
-        })
-      }, 100)
-    } */
   },
   methods: {
     modify: function () {
-      if (this.newPassword !== '') {
-        let url = 'http://api.com/v1/user/' + localStorage.getItem('userID') + '?access_token=' + localStorage.getItem('access_token')
-        axios.put(url + usertoken, qs.stringify({
+      if (this.newPassword !== '' && this.oldPassword !== '') {
+        let url = 'user/' + localStorage.getItem('userID') + '?access_token=' + localStorage.getItem('access_token')
+        axios.put(url, qs.stringify({
           old_passwd: this.oldPassword,
           new_passwd: this.newPassword
-        }))
+        })).then((response) => {
+          console.log(response)
+          if (response.data.error) {
+            Dialog.alert({
+              title: '修改失败',
+              message: response.data.message
+            })
+          } else {
+            Dialog.alert({
+              title: '修改成功',
+              message: response.data.data
+            })
+          }
+        })
       } else {
         Dialog.alert({
-          title: '冒个泡',
+          title: '修改失败',
           message: '请填写完整！'
-        }).then(() => {
         })
       }
     },
@@ -89,14 +85,12 @@ export default {
 .loginForm {
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 16%;
   margin-left: -275px;
-  margin-top: -160px;
   border-radius: 5px;
   -moz-border-radius: 5px;
-  padding: 20px 35px;
+  padding: 20px 35px 45px;
   width: 550px;
-  height: 320px;
   background: #fff;
   border: 1px solid #eaeaea;
   box-shadow: 0 0 25px #cac6c6;
