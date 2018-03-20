@@ -10,7 +10,15 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/apis': { //将www.exaple.com印射为/apis
+        target: 'http://api.com/v1/', // 接口域名
+        changeOrigin: true, //是否跨域
+        pathRewrite: {
+          '^/apis': '' //需要rewrite的,
+        }
+      }
+    },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
