@@ -1,8 +1,8 @@
 /*
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
- * @Last Modified by: Jeay
- * @Last Modified time: 2018-03-13 09:46:37
+ * @Last Modified by: hs.londy
+ * @Last Modified time: 2018-03-20 14:31:56
  */
 <template>
   <div class="containerWrap">
@@ -12,9 +12,6 @@
         <van-field v-model="username" label="用户名" icon="clear" placeholder="请输入用户名" @click-icon="username = ''" />
 
         <van-field v-model="password" type="password" label="密码" placeholder="请输入密码" />
-        <van-row>
-          <van-checkbox v-model="checked">记住密码？</van-checkbox>
-        </van-row>
         <van-button type="primary" @click="login">提交</van-button>
         <van-button type="danger">取消</van-button>
       </van-cell-group>
@@ -40,7 +37,7 @@ export default {
     login: function () {
       const self = this
       if (this.username !== '' && this.password !== '') {
-        axios.post('login', qs.stringify({
+        axios.post('/apis/login', qs.stringify({
           username: this.username,
           password: this.password
         }))
@@ -99,11 +96,10 @@ export default {
   .loginForm {
     position: static;
     width: 100%;
-    margin-left: 0px;
-    margin-top: 0px;
+    margin: 0px auto;
   }
   .containerWrap {
-    padding: 20px 15px;
+    padding: 50px 15px;
   }
 }
 .logonTitle {

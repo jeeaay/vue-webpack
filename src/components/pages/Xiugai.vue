@@ -1,8 +1,8 @@
 /*
  * @Author: londy
  * @Date: 2018-02-26 09:30:38
- * @Last Modified by: Jeay
- * @Last Modified time: 2018-03-13 09:37:05
+ * @Last Modified by: hs.londy
+ * @Last Modified time: 2018-03-20 14:36:02
  */
 
 <template>
@@ -38,7 +38,7 @@ export default {
   methods: {
     modify: function () {
       if (this.newPassword !== '' && this.oldPassword !== '') {
-        let url = 'user/' + localStorage.getItem('userID') + '?access_token=' + localStorage.getItem('access_token')
+        let url = '/apis/user/' + localStorage.getItem('userID') + '?access_token=' + localStorage.getItem('access_token')
         axios.put(url, qs.stringify({
           old_passwd: this.oldPassword,
           new_passwd: this.newPassword
