@@ -10,6 +10,38 @@ body
     font-family: Arial,Helvetica,STHeiti STXihei,Microsoft YaHei,Tohoma,sans-serif
     -webkit-font-smoothing: antialiased
     max-width: 100%
+.clearfix
+    display: block
+    &:after
+        content: " "
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden
+        overflow: hidden
+.top
+    position: relative
+.content
+    @media(max-width: 759px)
+        margin-top: 0 !important
+.leftSlide
+    animation: leftSlide 0.3s ease-out both
+@keyframes leftSlide
+    from
+        left: -100%
+    to
+        left: 0
+.mobileLogo
+    padding: 10px 15px
+    display: none
+    box-shadow: 0 0 25px #cac6c6
+    .logo
+        float: left
+    .btn
+        float: right
+        margin-top: 10px
+    @media(max-width: 759px)
+        display: block
 .header
     width: 100%
     height: 70px
@@ -18,6 +50,40 @@ body
     position: fixed
     top: 0
     left: 0
+    z-index: 10002  !important
+    .userT
+        @media(max-width: 759px)
+            width: 140px
+            margin: 0 auto
+            .headPortrait
+                width: 50% !important
+                img
+                    width: 63% !important
+            .userName
+                width: auto !important
+    @media(max-width: 759px)
+        width: 50%
+        height: 100%
+        left: -100%
+        overflow: height
+        font-size: 0.9rem
+        .logoTitle,.menu,.user
+            position: static !important
+            width: 100%
+        & .menuList .van-col
+            width: 100%
+    .logoTitle
+        text-align: left !important
+        padding-left: 10px
+        @media(max-width: 759px)
+            text-align: center !important
+    .dropMenu
+        @media(max-width: 759px)
+            position: relative !important
+            top: 0 !important
+            margin-top: 10px
+            .drop ul li
+                color: #fff
 .container
     width: 100%
     padding: 0 15px
@@ -31,6 +97,24 @@ body
 .content
     margin-top: 70px
     padding: 10px
+.mask
+    display: none
+    transition: all 0.4s ease-in-out
+    @media(max-width: 759px)
+        display: block
+        position: fixed
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        background: rgba(0,0,0,.5)
+        z-index: 10000
+.people
+    .van-col-12
+        @media(max-width: 420px)
+            width: 100% !important
+.pages
+    cursor: pointer
 // #app
 //     margin-top: 60px
 

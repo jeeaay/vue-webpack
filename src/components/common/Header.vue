@@ -1,37 +1,48 @@
 /*
  * @Author: londy
  * @Date: 2018-02-27 15:31:52
- * @Last Modified by: Jeay
- * @Last Modified time: 2018-03-13 08:53:31
+ * @Last Modified by: hs.londy
+ * @Last Modified time: 2018-03-20 19:21:24
  */
 <template>
-  <div class="header">
-    <div class="container">
-      <van-row class="top">
-        <van-col span="4" class="logoTitle">{{message}}</van-col>
-        <van-col span="16" class="menu">
-          <van-row class="menuList">
-            <van-col span="8" v-for="item in items" :key="item.id">
-              <router-link :to="{name:(item.name),params:{pageName:(item.description)}}">{{item.description}}</router-link>
-            </van-col>
-          </van-row>
-        </van-col>
-        <van-col span="4" class="user">
-          <div class="headPortrait">
-            <img src="../../assets/headportrait.jpg" alt="用户头像">
-          </div>
-          <div class="userName">{{user}}</div>
-          <div class="dropMenu">
-            <div class="drop">
-              <ul>
-                <li @click="met">修改密码</li>
-                <li @click="signOut">退出登录</li>
-              </ul>
-            </div>
-          </div>
-        </van-col>
-      </van-row>
+  <div class="public">
+    <div class="mobileLogo clearfix">
+      <div class="container">
+        <div class="logo"><img src="../../assets/logo.jpg"></div>
+        <div class="btn" @click="btn"><van-button type="primary">菜单</van-button></div>
+      </div>
     </div>
+    <div class="header" v-bind:class="{ 'leftSlide': leftSlider }">
+      <div class="container">
+        <van-row class="top">
+          <van-col span="5" class="logoTitle">{{message}}</van-col>
+          <van-col span="15" class="menu">
+            <van-row class="menuList">
+              <van-col span="8" v-for="item in items" :key="item.id">
+                <router-link :to="{name:(item.name),params:{pageName:(item.description)}}">{{item.description}}</router-link>
+              </van-col>
+            </van-row>
+          </van-col>
+          <van-col span="4" class="user">
+            <div class="userT clearfix">
+              <div class="headPortrait">
+                <img src="../../assets/headportrait.jpg" alt="用户头像">
+              </div>
+              <div class="userName">{{user}}</div>
+            </div>
+            <div class="dropMenu">
+              <div class="drop">
+                <ul>
+                  <li @click="met">修改密码</li>
+                  <li @click="signOut">退出登录</li>
+                </ul>
+              </div>
+            </div>
+          </van-col>
+        </van-row>
+      </div>
+    </div>
+    <div @click="close" v-bind:class="{ 'mask': mask }"></div>
   </div>
 </template>
 
@@ -43,6 +54,8 @@ export default {
       message: '案例采集管理后台',
       user: '',
       flag: true,
+      leftSlider: false,
+      mask: false,
       items: [
         { name: '用户管理', description: '用户管理' },
         { name: '分类管理', description: '分类管理' },
@@ -79,6 +92,14 @@ export default {
           path: '/'
         })
       })
+    },
+    btn: function () {
+      this.leftSlider = true
+      this.mask = true
+    },
+    close: function () {
+      this.mask = false
+      this.leftSlider = false
     }
   }
 }
@@ -108,8 +129,10 @@ export default {
 .user:hover {
   cursor: pointer;
 }
+@media(min-width:760px){
 .user:hover .dropMenu {
   animation: drop 0.4s ease-in-out both;
+}
 }
 .user .headPortrait,
 .user .userName {
