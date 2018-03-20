@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-27 15:31:52
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-20 19:21:24
+ * @Last Modified time: 2018-03-20 19:26:11
  */
 <template>
   <div class="public">
@@ -12,7 +12,7 @@
         <div class="btn" @click="btn"><van-button type="primary">菜单</van-button></div>
       </div>
     </div>
-    <div class="header" v-bind:class="{ 'leftSlide': leftSlider }">
+    <div class="header" v-bind:class="{ 'leftSlide': leftSlider }" @click="close">
       <div class="container">
         <van-row class="top">
           <van-col span="5" class="logoTitle">{{message}}</van-col>
