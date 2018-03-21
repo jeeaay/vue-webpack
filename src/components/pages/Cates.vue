@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-02-27 13:46:46
+ * @Last Modified time: 2018-03-21 13:42:38
  */
 <template>
   <div class="container content">
@@ -10,27 +10,27 @@
       <p>当前位置：{{$route.name}}</p>
     </div>
     <div class="catesContent">
-      <van-button type="primary" @click="addCate = true">
+      <van-button type="primary" @click="addCateBox = true">
         <van-icon name="add-o" />添加分类</van-button>
     </div>
     <h2>分类列表</h2>
     <van-row class="catesList">
       <van-col span="12" v-for="(cate,index) in cates" :key="cate.cate_id" @click.native="modCaseInfo(index)">
-        <van-cell :title="cate.cate_name" is-link value="编辑" @click="cateed = true"/>
+        <van-cell :title="cate.cate_name" is-link value="编辑"/>
       </van-col>
     </van-row>
-    <!-- <div class="pages">
-      <van-pagination v-model="currentPage" :total-items="24" :items-per-page="5" />
-    </div> -->
-    <van-popup v-model="addCate" class="addcate">
+    <div class="pages">
+      <van-pagination @change="onChange" v-model="currentPage" :total-items="totalCate" :items-per-page="10" />
+    </div>
+    <van-popup v-model="addCateBox" class="addcate">
       <h2>添加分类</h2>
       <van-row>
         <van-col span="24">
-          <van-field label="分类名称：" placeholder="请输入分类名称" />
+          <van-field label="分类名称：" placeholder="请输入分类名称" v-model="addCate" icon="clear" @click-icon="addCate = ''" />
         </van-col>
         <van-col span="24">
-          <van-button type="default" @click="addCate = false" style="margin-right: 20px;">取消</van-button>
-          <van-button type="primary" @click.native="onClickCate()">确认</van-button>
+          <van-button type="default" @click="addCateBox = false" style="margin-right: 30px;">取消</van-button>
+          <van-button type="primary" @click="onClickAlert">确认</van-button>
         </van-col>
       </van-row>
     </van-popup>
@@ -38,12 +38,12 @@
       <h2>编辑分类</h2>
       <van-row>
         <van-col span="24">
-          <van-field label="分类名称：" value="修改分类名称" icon="clear" @click-icon="username = ''"/>
-          <van-field label="分类描述：" type="textarea" value="修改分类描述" icon="clear" rows="1" autosize @click-icon="username = ''"/>
+          <van-field label="分类ID：" v-model="cateInfo.cate_id" disabled="disabled"/>
+          <van-field label="分类名称：" v-model="cateInfo.cate_name" @keyup="onKeyup(cateInfo.cate_id)" icon="clear" @click-icon="cateInfo.cate_name = ''" />
         </van-col>
         <van-col span="24" class="marginMid">
-          <van-button type="default" @click="cateb = false" style="margin-right: 20px;">取消</van-button>
-          <van-button type="danger" @click="cateb = false">删除</van-button>
+          <van-button type="default" @click="cateed = false" style="margin-right: 20px;">取消</van-button>
+          <van-button type="danger" @click="cateed = false" @click.native="deleteCate(cateInfo.cate_id)">删除</van-button>
         </van-col>
       </van-row>
     </van-popup>
@@ -52,83 +52,99 @@
 <script>
 import axios from 'axios'
 import { Dialog } from 'vant'
-// import qs from 'qs'
+import qs from 'qs'
+let GetUserList = (currentPage) => {
+  return new Promise((resolve, reject) => {
+    if (localStorage.getItem('access_token')) {
+      let usertoken = localStorage.getItem('access_token')
+      let url = '/apis/cate/?access_token=' + usertoken + '&page=' + currentPage
+      axios.get(url)
+      .then(response => {
+        resolve(response.data)
+      })
+    }
+  })
+}
+
 export default {
   data () {
     return {
-      currentPage: true,
-      addCate: false,
+      addCateBox: false,
       cateed: false,
-      cates: []
+      cates: [],
+      totalCate: 0,
+      currentPage: 1,
+      cateInfo: [],
+      addCate: ''
     }
   },
-  mounted () {
-    if (localStorage.getItem('access_token')) {
-      var usertoken = localStorage.getItem('access_token')
-      var url = 'http://api.com/v1/cate/?access_token='
-      axios.get(url + usertoken + '&page=1')
-      .then(response => {
-        console.log(response.data)
-        let cateArr = []
-        for (var i in response.data.data) {
-          cateArr.push(response.data.data[i])
+  async mounted () {
+    let data = await GetUserList(this.currentPage)
+    this.cates = data.data
+    // this.totalCate = data.totalCate  后台需要有totalCate字段
+  },
+  methods: {
+    async onChange () {
+      let data = await GetUserList(this.currentPage)
+      this.cates = data.data
+      // this.totalCate = data.totalCate 后台需要有totalCate字段
+    },
+    modCaseInfo (index) {
+      this.cateed = true
+      this.cateInfo = this.cates[index]
+    },
+    deleteCate (id) {
+      let url = '/apis/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
+      axios.delete(url)
+        .then((response) => {
+          Dialog.alert({
+            title: '删除成功',
+            message: response.data.data
+          }).then(() => {
+            this.$router.go(0)
+          })
+        })
+    },
+    onKeyup (id) {
+      let url = '/apis/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
+      clearTimeout(window.t)
+      window.t = setTimeout(() => {
+        if (this.cateInfo.cate_name !== '') {
+          axios.put(url, qs.stringify({
+            cate_name: this.cateInfo.cate_name
+          }))
         }
-        this.cates = cateArr
-      }, (response) => {
+      }, 500)
+    },
+    onClickAlert () {
+      let url = '/apis/cate/?access_token=' + localStorage.getItem('access_token')
+      if (this.addUser !== '') {
+        axios.post(url, qs.stringify({
+          cate_name: this.addCate
+        }))
+        .then((response) => {
+          if (response.data.error) {
+            Dialog.alert({
+              title: '添加分类失败',
+              message: response.data.message
+            })
+          } else {
+            Dialog.alert({
+              title: '添加成功',
+              message: '分类' + this.addCate + '添加成功'
+            }).then(() => {
+              this.$router.go(0)
+            })
+          }
+        })
+      } else {
         Dialog.alert({
-          title: '冒个泡',
-          message: '登录超时请重新登录'
+          title: '错误',
+          message: '请填写分类名'
         })
-        this.$router.push({
-          path: '/'
-        })
-      })
-    } else {
-      setTimeout(function () {
-        self.$router.push({
-          path: '/'
-        })
-      }, 100)
+      }
     }
   }
-  // methods: {
-  //   openUserInfo (index) {
-  //     this.show = true
-  //     this.userInfo = this.users[index]
-  //   },
-  //   onClickAlert () {
-  //     var usertoken = localStorage.getItem('access_token')
-  //     var url = 'http://api.com/v1/user/?access_token='
-  //     axios.post(url + usertoken, qs.stringify({
-  //       user_name: this.addUser,
-  //       passwd: this.addPassword,
-  //       real_name: this.addReal
-  //     }))
-  //     .then((response) => {
-  //       let newUser = {
-  //         user_id: response.data.data,
-  //         user_name: this.addUser,
-  //         real_name: this.addReal,
-  //         last_login_ip: ''
-  //       }
-  //       this.users.push(newUser)
-  //       this.add = false
-  //       // console.log(response)
-  //     })
-  //   },
-  //   deleteUser (id) {
-  //     // var usertoken = localStorage.getItem('access_token')
-  //     // var url = 'http://api.com/v1/user/?access_token='
-  //     // axios.post(url + usertoken)
-  //     // .then((response) => {
-  //     let index = this.users.findIndex(item => {
-  //       return item.user_id === id
-  //     })
-  //     this.users.splice(index, 1)
-  //     this.show = false
-  //     // })
-  //   }
-  // }
 }
 </script>
 
@@ -151,6 +167,9 @@ export default {
 }
 .addcate,.cateb {
   padding: 10px 25px;
+}
+.addcate h2{
+  margin: 10px 0;
 }
 @media (max-width: 759px) {
   .addcate,.cateb {

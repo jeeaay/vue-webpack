@@ -10,6 +10,8 @@ body
     font-family: Arial,Helvetica,STHeiti STXihei,Microsoft YaHei,Tohoma,sans-serif
     -webkit-font-smoothing: antialiased
     max-width: 100%
+.van-field__icon
+    cursor: pointer
 .clearfix
     display: block
     &:after
@@ -110,6 +112,10 @@ body
         background: rgba(0,0,0,.5)
         z-index: 10000
 .people
+    .van-col-12
+        @media(max-width: 420px)
+            width: 100% !important
+.catesList
     .van-col-12
         @media(max-width: 420px)
             width: 100% !important
