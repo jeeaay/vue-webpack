@@ -2,17 +2,17 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-20 14:31:56
+ * @Last Modified time: 2018-03-21 11:08:49
  */
 <template>
   <div class="containerWrap">
     <div class="loginForm">
       <h1 class="logonTitle">{{ title }}</h1>
       <van-cell-group class="">
-        <van-field v-model="username" label="用户名" icon="clear" placeholder="请输入用户名" @click-icon="username = ''" />
+        <van-field v-model="username" label="用户名" icon="clear" placeholder="请输入用户名" @click-icon="username = ''" @keyup.enter.native="login"/>
 
-        <van-field v-model="password" type="password" label="密码" placeholder="请输入密码" />
-        <van-button type="primary" @click="login">提交</van-button>
+        <van-field v-model="password" type="password" label="密码" placeholder="请输入密码" @keyup.enter.native="login"/>
+        <van-button type="primary" @click.native="login()">提交</van-button>
         <van-button type="danger">取消</van-button>
       </van-cell-group>
     </div>
@@ -34,7 +34,7 @@ export default {
   },
   mounted () {},
   methods: {
-    login: function () {
+    login () {
       const self = this
       if (this.username !== '' && this.password !== '') {
         axios.post('/apis/login', qs.stringify({
