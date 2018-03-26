@@ -5,8 +5,10 @@ import App from './App'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
-import { Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
-
+import { Radio, Uploader, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
+Vue.use(Panel)
+Vue.use(Uploader)
+Vue.use(Radio)
 Vue.use(Field)
 Vue.use(Row)
 Vue.use(Col)

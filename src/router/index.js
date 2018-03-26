@@ -5,7 +5,6 @@ import Home from '@/components/common/Home'
 import Users from '@/components/pages/Users'
 import Cates from '@/components/pages/Cates'
 import Cases from '@/components/pages/Cases'
-import Info from '@/components/pages/Info'
 import Xiugai from '@/components/pages/Xiugai'
 // import About from '@/components/pages/About'
 import Login from '@/components/pages/Login'
@@ -39,7 +38,6 @@ let router = new Router({
         { path: 'users', component: Users, name: '用户管理', meta: { title: '用户管理' } },
         { path: 'category', component: Cates, name: '分类管理', meta: { title: '分类管理' } },
         { path: 'cases', component: Cases, name: '案例管理', meta: { title: '案例管理' } },
-        { path: 'info', component: Info, name: '用户信息', meta: { title: '用户信息' } },
         { path: 'xiugai', component: Xiugai, name: '修改密码', meta: { title: '修改密码' } }
       ]
     }

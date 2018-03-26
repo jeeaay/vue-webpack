@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-21 13:42:38
+ * @Last Modified time: 2018-03-22 11:35:32
  */
 <template>
   <div class="container content">
@@ -53,14 +53,14 @@
 import axios from 'axios'
 import { Dialog } from 'vant'
 import qs from 'qs'
-let GetUserList = (currentPage) => {
+let GetCateList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
       let url = '/apis/cate/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
-        resolve(response.data)
+        resolve(response.data.data)
       })
     }
   })
@@ -79,15 +79,15 @@ export default {
     }
   },
   async mounted () {
-    let data = await GetUserList(this.currentPage)
-    this.cates = data.data
-    // this.totalCate = data.totalCate  后台需要有totalCate字段
+    let data = await GetCateList(this.currentPage)
+    this.cates = data.cateList
+    this.totalCate = data.totalCate
   },
   methods: {
     async onChange () {
-      let data = await GetUserList(this.currentPage)
-      this.cates = data.data
-      // this.totalCate = data.totalCate 后台需要有totalCate字段
+      let data = await GetCateList(this.currentPage)
+      this.cates = data.cateList
+      this.totalCate = data.totalCate
     },
     modCaseInfo (index) {
       this.cateed = true
@@ -167,6 +167,9 @@ export default {
 }
 .addcate,.cateb {
   padding: 10px 25px;
+}
+.addcate{
+  padding: 25px 20px;
 }
 .addcate h2{
   margin: 10px 0;
