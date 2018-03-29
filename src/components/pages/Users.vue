@@ -37,7 +37,7 @@
               </van-col>
               <van-col span="12">用户真实信息：</van-col>
               <van-col span="12">
-                <van-field v-model="userInfo.real_name" @click-icon="userInfo.real_name = ''" />
+                <van-field v-model="userInfo.real_name" @keyup="onKeyup(userInfo.user_id)" @click-icon="userInfo.real_name = ''" />
               </van-col>
               <van-col span="12">上次登录IP：</van-col>
               <van-col span="12">{{userInfo.last_login_ip ? userInfo.last_login_ip : '暂无'}}</van-col>
@@ -123,7 +123,6 @@ export default {
     openUserInfo (index) {
       this.show = true
       this.userInfo = this.users[index]
-      console.log(this.users[index])
     },
     onClickAlert () {
       let url = '/apis/user/?access_token=' + localStorage.getItem('access_token')
