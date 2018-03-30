@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:41:52
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-22 14:38:16
+ * @Last Modified time: 2018-03-29 14:38:41
  */
 <template>
   <div class="container content">
@@ -83,7 +83,7 @@ let GetUserList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/user/?access_token=' + usertoken + '&page=' + currentPage
+      let url = '/user/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
         resolve(response.data.data)
@@ -125,7 +125,7 @@ export default {
       this.userInfo = this.users[index]
     },
     onClickAlert () {
-      let url = '/apis/user/?access_token=' + localStorage.getItem('access_token')
+      let url = '/user/?access_token=' + localStorage.getItem('access_token')
       if (this.addUser !== '') {
         axios.post(url, qs.stringify({
           user_name: this.addUser,
@@ -155,7 +155,7 @@ export default {
       }
     },
     deleteUser (id) {
-      let url = '/apis/user/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/user/' + id + '?access_token=' + localStorage.getItem('access_token')
       axios.delete(url)
         .then((response) => {
           Dialog.alert({
@@ -167,7 +167,7 @@ export default {
         })
     },
     onKeyup (id) {
-      let url = '/apis/user/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/user/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.userInfo.user_name !== '' && this.userInfo.real_name !== '') {
@@ -197,7 +197,7 @@ export default {
   padding: 10px 0;
 }
 .adduitem {
-  padding: 10px 25px;
+  padding: 10px 25px 25px;
 }
 @media (max-width: 759px) {
   .adduitem {

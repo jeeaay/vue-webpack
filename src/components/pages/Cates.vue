@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-22 11:35:32
+ * @Last Modified time: 2018-03-29 14:38:15
  */
 <template>
   <div class="container content">
@@ -42,7 +42,7 @@
           <van-field label="分类名称：" v-model="cateInfo.cate_name" @keyup="onKeyup(cateInfo.cate_id)" icon="clear" @click-icon="cateInfo.cate_name = ''" />
         </van-col>
         <van-col span="24" class="marginMid">
-          <van-button type="default" @click="cateed = false" style="margin-right: 20px;">取消</van-button>
+          <van-button type="default" @click="cateed = false" style="margin-right: 20px;">关闭</van-button>
           <van-button type="danger" @click="cateed = false" @click.native="deleteCate(cateInfo.cate_id)">删除</van-button>
         </van-col>
       </van-row>
@@ -57,7 +57,7 @@ let GetCateList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/cate/?access_token=' + usertoken + '&page=' + currentPage
+      let url = '/cate/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
         resolve(response.data.data)
@@ -94,7 +94,7 @@ export default {
       this.cateInfo = this.cates[index]
     },
     deleteCate (id) {
-      let url = '/apis/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
       axios.delete(url)
         .then((response) => {
           Dialog.alert({
@@ -106,7 +106,7 @@ export default {
         })
     },
     onKeyup (id) {
-      let url = '/apis/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.cateInfo.cate_name !== '') {
@@ -117,7 +117,7 @@ export default {
       }, 500)
     },
     onClickAlert () {
-      let url = '/apis/cate/?access_token=' + localStorage.getItem('access_token')
+      let url = '/cate/?access_token=' + localStorage.getItem('access_token')
       if (this.addUser !== '') {
         axios.post(url, qs.stringify({
           cate_name: this.addCate
@@ -166,7 +166,7 @@ export default {
   padding: 10px 0;
 }
 .addcate,.cateb {
-  padding: 10px 25px;
+  padding: 10px 25px 25px;
 }
 .addcate{
   padding: 25px 20px;

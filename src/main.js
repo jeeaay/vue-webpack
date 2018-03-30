@@ -28,7 +28,7 @@ Vue.config.productionTip = false
 
 // axios 配置
 axios.defaults.timeout = 2000
-// axios.defaults.baseURL = 'http://api.com/v1/'
+axios.defaults.baseURL = 'https://case.lmzg.com/v1/'
 
 // // http request 拦截器
 /* axios.interceptors.request.use(

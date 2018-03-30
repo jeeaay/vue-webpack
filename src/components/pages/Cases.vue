@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-29 10:00:55
+ * @Last Modified time: 2018-03-30 14:47:46
  */
 <template>
   <div class="container content">
@@ -22,7 +22,14 @@
               <img :src="JSON.parse(item.img_path.replace(/\\\\/g, '/'))[0]">
             </van-col>
             <van-col span="15">
-              <van-cell :title="item.title" value="详细信息" :label="String(item.writer_id)" is-link/>
+              <p>{{item.title}}</p>
+              <select v-model="item.type_id" class="caseNameSelected" disabled="disabled">
+                <option>请选择分类</option>
+                <option v-for="cate in cates" v-bind:value="cate.cate_id" :key="cate.cate_id">
+                  分类：{{cate.cate_name}}
+                </option>
+              </select>
+              <p class="float-right">详细信息 <van-icon name="arrow" /></p>
             </van-col>
           </van-row>
         </van-cell-group>
@@ -44,8 +51,140 @@
               class="caseTitle"
             />
           </van-cell-group>
-            <p>发布时间：<span>{{caseTime}}</span></p>
+          <div class="timeSwitch">
+            <div v-if="isShow" @click="showToggle" class="noselect">更新时间：<span>{{updatatime}}</span></div>
+            <div v-else @click="showToggle" class="noselect">发布时间：<span>{{caseTime}}</span></div>
           </div>
+          </div>
+          <van-row class="caseMainInfo">
+            <van-cell-group>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.dep"
+                    label="部门"
+                    icon="clear"
+                    placeholder="请输入采集部门"
+                    @click-icon="caseInfo.dep = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.dep_user"
+                    label="采集人员"
+                    icon="clear"
+                    placeholder="请输入采集人员"
+                    @click-icon="caseInfo.dep_user = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.info_source"
+                    label="信息来源"
+                    icon="clear"
+                    placeholder="请输入信息来源"
+                    @click-icon="caseInfo.info_source = ''"
+                  />
+                </van-col>
+            </van-cell-group>
+          </van-row>
+          <div class="other">
+            <van-row>
+              <van-col span="12" class="widthS">案例类型：</van-col>
+              <van-col span="12">
+                <select v-model="selected" class="selectCase paddingLeftS" @change='change(caseInfo.case_id)'>
+                  <option>请选择分类</option>
+                  <option v-for="cate in cates" v-bind:value="cate.cate_id" :key="cate.cate_id">
+                    {{cate.cate_name}}
+                  </option>
+                </select>
+                <span class="fontS">选中的是：分类 {{ selected }}</span>
+              </van-col>
+              <van-col span="12" class="widthS">是否为国际：</van-col>
+              <van-col span="12">
+                <van-row>
+                  <van-col span="12"><van-radio name="1" v-model="radio" @click='clickChange(caseInfo.case_id)'>是</van-radio></van-col>
+                  <van-col span="12"><van-radio name="0" v-model="radio" @click='clickChange(caseInfo.case_id)'>不是</van-radio></van-col>
+                </van-row>
+              </van-col>
+            </van-row>
+          </div>
+          <van-row class="caseMainInfo">
+            <van-cell-group>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.equipment"
+                    label="设备配置"
+                    icon="clear"
+                    placeholder="请输入设备配置"
+                    @click-icon="caseInfo.equipment = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.material"
+                    label="加工物料"
+                    icon="clear"
+                    placeholder="请输入加工物料"
+                    @click-icon="caseInfo.material = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.capacity"
+                    label="产量"
+                    icon="clear"
+                    placeholder="请输入产量"
+                    @click-icon="caseInfo.capacity = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.feed_size"
+                    label="进料粒度"
+                    icon="clear"
+                    placeholder="请输入进料粒度"
+                    @click-icon="caseInfo.feed_size = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.output_size"
+                    label="出料粒度"
+                    icon="clear"
+                    placeholder="请输入出料粒度"
+                    @click-icon="caseInfo.output_size = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.application"
+                    label="应用领域"
+                    icon="clear"
+                    placeholder="请输入应用领域"
+                    @click-icon="caseInfo.application = ''"
+                  />
+                </van-col>
+                <van-col span="12">
+                  <van-field
+                    @keyup="onKeyup(caseInfo.case_id)"
+                    v-model="caseInfo.other"
+                    label="其他"
+                    icon="clear"
+                    placeholder="其他"
+                    @click-icon="caseInfo.other = ''"
+                  />
+                </van-col>
+            </van-cell-group>
+          </van-row>
           <h3>案例图集：</h3>
           <van-row class="casePic" gutter="20">
             <van-col span="6" v-for="(caseImageInfo,index) in caseImageInfos" :key='caseImageInfo'>
@@ -58,45 +197,44 @@
               <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
             </van-uploader>
           </van-button>
-          <h3>案例内容：</h3>
+          <h3>客户详情：</h3>
           <div class="caseBody">
-          <van-cell-group>
-            <van-field
-              @keyup="onKeyup(caseInfo.case_id)"
-              v-model="caseInfo.content"
-              type="textarea"
-              placeholder="请输入案例内容"
-              rows="1"
-              icon="clear"
-              @click-icon="caseInfo.content = ''"
-              autosize
-            />
-          </van-cell-group>
+            <van-cell-group>
+              <van-field
+                @keyup="onKeyup(caseInfo.case_id)"
+                v-model="caseInfo.content"
+                type="textarea"
+                placeholder="请输入客户详情"
+                rows="1"
+                icon="clear"
+                @click-icon="caseInfo.content = ''"
+                autosize
+              />
+            </van-cell-group>
           </div>
-          <h3>其他：</h3>
-          <div class="other">
-            <van-row>
-              <van-col span="12">案例类型：</van-col>
-              <van-col span="12">
-                <select v-model="selected" class="selectCase" @change='change(caseInfo.case_id)'>
-                  <option>请选择分类</option>
-                  <option v-for="cate in cates" v-bind:value="cate.cate_id" :key="cate.cate_id">
-                    {{cate.cate_name}}
-                  </option>
-                </select>
-                <span class="fontS">选中的是：分类 {{ selected }}</span>
-              </van-col>
-              <van-col span="12">是否为国际：</van-col>
-              <van-col span="12">
-                <van-row>
-                  <van-col span="12"><van-radio name="1" v-model="radio" @click='clickChange(caseInfo.case_id)'>是</van-radio></van-col>
-                  <van-col span="12"><van-radio name="0" v-model="radio" @click='clickChange(caseInfo.case_id)'>不是</van-radio></van-col>
-                </van-row>
-              </van-col>
-              <van-col span="12"><van-button type="default" @click="show = false">返回案例列表</van-button></van-col>
-              <van-col span="12"><van-button type="danger" @click.native="deleteCase(caseInfo.case_id)">删除案例</van-button></van-col>
-            </van-row>
+          <h3>现场情况：</h3>
+          <div class="caseBody">
+            <van-cell-group>
+              <van-field
+                @keyup="onKeyup(caseInfo.case_id)"
+                v-model="caseInfo.scene"
+                type="textarea"
+                placeholder="请输入现场情况"
+                rows="1"
+                icon="clear"
+                @click-icon="caseInfo.scene = ''"
+                autosize
+              />
+            </van-cell-group>
           </div>
+          <van-row>
+            <van-col span="12" class="infoBtn">
+              <van-button type="default" @click="show = false">返回案例列表</van-button>
+            </van-col>
+            <van-col span="12" class="infoBtn">
+              <van-button type="danger" @click.native="deleteCase(caseInfo.case_id)">删除案例</van-button>
+            </van-col>
+          </van-row>
         </div>
     </van-popup>
     <div class="addCase clearfix">
@@ -117,6 +255,123 @@
                 <p>作者：{{caseAu}}</p>
               </div>
             </div>
+            <van-row class="caseMainInfo">
+              <van-cell-group>
+                  <van-col span="12">
+                    <van-field
+                      v-model="dep"
+                      label="部门："
+                      icon="clear"
+                      placeholder="请输入采集部门"
+                      @click-icon="dep = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="dep_user"
+                      label="采集人员："
+                      icon="clear"
+                      placeholder="请输入采集人员"
+                      @click-icon="dep_user = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="info_source"
+                      label="信息来源："
+                      icon="clear"
+                      placeholder="请输入信息来源"
+                      @click-icon="info_source = ''"
+                    />
+                  </van-col>
+              </van-cell-group>
+            </van-row>
+            <div class="other">
+              <van-row>
+                <van-col span="12">
+                  案例类型：
+                  <select v-model="addSelected" class="selectCase">
+                    <option>请选择分类</option>
+                    <option v-for="addCaseCate in addCaseCates" v-bind:value="addCaseCate.cate_id" :key="addCaseCate.cate_id">
+                      {{addCaseCate.cate_name}}
+                    </option>
+                  </select>
+                  <span class="fontS">{{descript}}{{addSelected}}</span>
+                </van-col>
+                <van-col span="12">
+                  <div class="ina">是否为国际：</div>
+                  <van-radio name="1" v-model="addRadio">是</van-radio>
+                  <van-radio name="0" v-model="addRadio">不是</van-radio>
+                </van-col>
+              </van-row>
+            </div>
+            <van-row class="caseMainInfo">
+              <van-cell-group>
+                  <van-col span="12">
+                    <van-field
+                      v-model="equipment"
+                      label="设备配置："
+                      icon="clear"
+                      placeholder="请输入设备配置"
+                      @click-icon="equipment = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="material"
+                      label="加工物料："
+                      icon="clear"
+                      placeholder="请输入加工物料"
+                      @click-icon="material = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="capacity"
+                      label="产量："
+                      icon="clear"
+                      placeholder="请输入产量"
+                      @click-icon="capacity = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="feed_size"
+                      label="进料粒度："
+                      icon="clear"
+                      placeholder="请输入进料粒度"
+                      @click-icon="feed_size = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="output_size"
+                      label="出料粒度："
+                      icon="clear"
+                      placeholder="请输入出料粒度"
+                      @click-icon="output_size = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="application"
+                      label="应用领域："
+                      icon="clear"
+                      placeholder="请输入应用领域"
+                      @click-icon="application = ''"
+                    />
+                  </van-col>
+                  <van-col span="12">
+                    <van-field
+                      v-model="other"
+                      label="其他："
+                      icon="clear"
+                      placeholder="其他"
+                      @click-icon="other = ''"
+                    />
+                  </van-col>
+              </van-cell-group>
+            </van-row>
             <h3>案例图集：</h3>
             <van-button type="default" class="upload">
               <van-uploader :after-read="logContent" accept="image/png, image/gif, image/jpeg" multiple>
@@ -130,42 +385,34 @@
                 <div class="deleteImage" @click="adddeleteImage(index)"><van-icon name="clear" /></div>
               </van-col>
             </van-row>
-            <h3>案例内容：</h3>
+            <h3>客户详情：</h3>
             <div class="caseBody">
               <van-cell-group>
                 <van-field
                   v-model="addCaseContent"
                   type="textarea"
-                  placeholder="请输入案例内容"
+                  placeholder="请输入客户详情"
                   rows="1"
                   autosize
                 />
               </van-cell-group>
             </div>
-            <h3>其他：</h3>
-            <div class="other">
-              <van-row>
-                <van-col span="12">案例类型：</van-col>
-                <van-col span="12">
-                  <select v-model="addSelected" class="selectCase">
-                    <option>请选择分类</option>
-                    <option v-for="addCaseCate in addCaseCates" v-bind:value="addCaseCate.cate_id" :key="addCaseCate.cate_id">
-                      {{addCaseCate.cate_name}}
-                    </option>
-                  </select>
-                  <span class="fontS">{{descript}}{{addSelected}}</span>
-                </van-col>
-                <van-col span="12">是否为国际：</van-col>
-                <van-col span="12">
-                  <van-row>
-                    <van-col span="12"><van-radio name="1" v-model="addRadio">是</van-radio></van-col>
-                    <van-col span="12"><van-radio name="0" v-model="addRadio">不是</van-radio></van-col>
-                  </van-row>
-                </van-col>
+            <h3>现场情况：</h3>
+            <div class="caseBody">
+              <van-cell-group>
+                <van-field
+                  v-model="scene"
+                  type="textarea"
+                  placeholder="请输入现场情况"
+                  rows="1"
+                  autosize
+                />
+              </van-cell-group>
+            </div>
+            <van-row>
                 <van-col span="12" class="btnStyle"><van-button type="default" @click="addCase = false">取消</van-button></van-col>
                 <van-col span="12" class="btnStyle"><van-button type="primary" @click="onClickAlert">确认</van-button></van-col>
-              </van-row>
-            </div>
+            </van-row>
           </div>
       </van-popup>
     </div>
@@ -179,7 +426,7 @@ let GetCaseList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/lcase/?access_token=' + usertoken + '&page=' + currentPage
+      let url = '/lcase/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
         resolve(response.data.data)
@@ -187,12 +434,14 @@ let GetCaseList = (currentPage) => {
     }
   })
 }
-function timestampToTime (timestamp) {
+function upDataToTime (timestamp) {
   let date = new Date(timestamp * 1000)
   let Y = date.getFullYear() + '/'
   let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '/'
   let D = date.getDate() + ' '
-  return (Y + M + D)
+  let H = date.getHours() + ':'
+  let m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes())
+  return (Y + M + D + H + m)
 }
 export default {
   data () {
@@ -203,7 +452,7 @@ export default {
       currentPage: 1,
       caseCate: '分类ID',
       radio: '',
-      addRadio: '',
+      addRadio: '0',
       cases: [],
       images: [],
       totalCase: 0,
@@ -212,9 +461,22 @@ export default {
       addSelected: '',
       zanf: [],
       caseTime: '',
+      isShow: false,
       catePage: '',
       addCaseTitle: '',
+      dep: '',
+      dep_user: '',
+      info_source: '',
+      scene: '',
+      equipment: '',
+      material: '',
+      capacity: '',
+      feed_size: '',
+      output_size: '',
+      application: '',
+      other: '',
       addCaseTime: '',
+      updatatime: '',
       addCaseContent: '',
       caseImageInfos: [],
       caseAu: '',
@@ -227,8 +489,8 @@ export default {
   },
   async mounted () {
     let data = await GetCaseList(this.currentPage)
-    this.addCaseTime = timestampToTime(Date.parse(new Date()) / 1000)
-    this.caseAu = localStorage.getItem('userID')
+    this.addCaseTime = upDataToTime(Date.parse(new Date()) / 1000)
+    this.caseAu = localStorage.getItem('real_name')
     this.cases = data.caseList
     this.totalCase = data.totalCase
     if (this.addSelected === '') {
@@ -238,7 +500,7 @@ export default {
     }
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/cate/?access_token=' + usertoken
+      let url = '/cate/?access_token=' + usertoken
       axios.get(url)
       .then(response => {
         this.cateList = response.data.data
@@ -254,7 +516,7 @@ export default {
         if (this.catePage >= 2) {
           for (let cateP = 2; cateP <= this.catePage; cateP++) {
             let usertoken = localStorage.getItem('access_token')
-            let url = '/apis/cate/?access_token=' + usertoken + '&page=' + cateP
+            let url = '/cate/?access_token=' + usertoken + '&page=' + cateP
             axios.get(url)
             .then(response => {
               this.cates = this.cates.concat(response.data.data.cateList)
@@ -266,6 +528,13 @@ export default {
     }
   },
   methods: {
+    showToggle () {
+      if (this.isShow === true) {
+        this.isShow = false
+      } else {
+        this.isShow = true
+      }
+    },
     async onChange () {
       let data = await GetCaseList(this.currentPage)
       this.cases = data.caseList
@@ -279,9 +548,8 @@ export default {
     },
     caseInfoAddImage (file) {
       this.caseImageInfos.push(file.content)
-      console.log(this.caseImageInfos)
       let addImage = file.content
-      let url = '/apis/imgmanage/add/' + this.caseInfo.case_id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/imgmanage/add/' + this.caseInfo.case_id + '?access_token=' + localStorage.getItem('access_token')
       axios.post(url, qs.stringify({
         case_id: this.caseInfo.case_id,
         img: addImage
@@ -290,13 +558,12 @@ export default {
     async openCaseInfo (index) {
       this.show = true
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/lcase/' + index + '?access_token=' + usertoken
-
+      let url = '/lcase/' + index + '?access_token=' + usertoken
       let readcase = await axios(url)
-
       this.caseInfo = readcase['data']['data']
       this.caseImageInfos = JSON.parse(this.caseInfo.img_path)
-      this.caseTime = timestampToTime(this.caseInfo.pub_date)
+      this.caseTime = upDataToTime(this.caseInfo.pub_date)
+      this.updatatime = upDataToTime(this.caseInfo.up_date)
       if (this.caseInfo.type_id === null || this.caseInfo.type_id === '') {
         this.selected = '请选择分类'
       } else {
@@ -307,7 +574,7 @@ export default {
     },
     deleteImage (index) {
       let delo = this.caseImageInfos.splice(index, 1)
-      let url = '/apis/imgmanage/del?access_token=' + localStorage.getItem('access_token')
+      let url = '/imgmanage/del?access_token=' + localStorage.getItem('access_token')
       axios.post(url, qs.stringify({
         case_id: this.caseInfo.case_id,
         imgarr: JSON.stringify(this.caseImageInfos),
@@ -318,19 +585,30 @@ export default {
       this.imagArrs.splice(index, 1)
     },
     onKeyup (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
           axios.put(url, qs.stringify({
             title: this.caseInfo.title,
-            content: this.caseInfo.content
+            content: this.caseInfo.content,
+            dep: this.caseInfo.dep,
+            dep_user: this.caseInfo.dep_user,
+            info_source: this.caseInfo.info_source,
+            scene: this.caseInfo.scene,
+            equipment: this.caseInfo.equipment,
+            material: this.caseInfo.material,
+            capacity: this.caseInfo.capacity,
+            feed_size: this.caseInfo.feed_size,
+            application: this.caseInfo.application,
+            other: this.caseInfo.other,
+            output_size: this.caseInfo.output_size
           }))
         }
       }, 500)
     },
     change (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         axios.put(url, qs.stringify({
@@ -339,7 +617,7 @@ export default {
       }, 500)
     },
     clickChange (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
@@ -350,20 +628,30 @@ export default {
       }, 500)
     },
     onClickAlert () {
-      let url = '/apis/lcase/?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/?access_token=' + localStorage.getItem('access_token')
       if (this.addCaseTitle !== '') {
         axios.post(url, qs.stringify({
           title: this.addCaseTitle,
+          dep: this.dep,
+          dep_user: this.dep_user,
+          info_source: this.info_source,
+          equipment: this.equipment,
+          material: this.material,
+          capacity: this.capacity,
+          feed_size: this.feed_size,
+          output_size: this.output_size,
+          application: this.application,
+          other: this.other,
+          scene: this.scene,
           content: this.addCaseContent,
           type_id: this.addSelected,
           is_international: this.addRadio,
-          writer_id: this.caseAu,
+          writer_id: localStorage.getItem('userID'),
           pub_date: Date.parse(new Date()) / 1000,
           img_path: this.imagArrs
         }))
         .then((response) => {
           if (response.data.error) {
-            console.log(response.data.error)
             Dialog.alert({
               title: '添加案例失败',
               message: response.data.message
@@ -385,7 +673,7 @@ export default {
       }
     },
     deleteCase (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       axios.delete(url)
         .then((response) => {
           Dialog.alert({
@@ -422,16 +710,20 @@ export default {
           width: 100%
 .caseInfo
   height: 100%
-  width: 60%
+  width: 65%
   padding: 80px 20px 0 20px
+  overflow-y: scroll
   @media(max-width: 1000px)
     width: 90%
   @media(max-width: 759px)
-    width: 95%
+    padding: 15px 20px 0 20px
+    width: 100%
   .caseInfoBox
     .top
       .caseTitleInput
         float: left
+        @media(max-width: 759px)
+          float: none
         .caseTitle
           padding-left: 0
           input
@@ -439,10 +731,15 @@ export default {
             font-weight: 700
             color: #333
             height: 50px
-      p
+      .timeSwitch
         float: right
+        @media(max-width: 759px)
+          float: none
         margin-top: 15px
     .casePic
+      .van-col-6
+        @media(max-width: 759px)
+          width: 40% !important
       .van-col
         position: relative
         img
@@ -458,37 +755,47 @@ export default {
       textarea 
         height: 100px
 .other
+  margin-top: 20px
+  font-size: 14px
+  .ina,.van-radio
+    float: left
+  .van-radio
+    margin: 0 20px 0 10px
   .van-col
     margin-bottom: 20px
   .caseCate
     padding-left: 0
 .selectCase
-  width: 140px
+  width: 60%
   padding-left: 5px
   height: 30px
-  font-size: 16px
   border: 1px solid #ccc
+  margin-left: 12px
   color: #333
 .fontS
   font-size: 14px
   color: #777
 .addCase
   .addCaseInfo
+    overflow-y: scroll
     @media(max-width: 1199px)
       width: 100% !important
       height: 90% !important
-      overflow-y: scroll
     @media(max-width: 759px)
       width: 100% !important
       height: 100% !important
       padding-top: 0 !important
   .btnStyle
+    margin-bottom: 20px
+    margin-top: 20px
     button
       width: 60%
       margin: 0 auto
       display: block
   .addAu
     float: right
+    @media(max-width: 759px)
+      float: none
     p
       margin-left: 15px
       clear: both
@@ -498,12 +805,49 @@ export default {
 .van-uploader
   margin-bottom: 10px
   i
-    vertical-align: middle;
+    vertical-align: middle
 .iconFont
   font-size: 18px !important
 .addpic
   margin-top: 10px
+.fontS
+  display: none
 .upload
   margin-top: 10px
+.caseOther
+  .van-cell
+    padding-left: 0
+    padding-right: 0
+.other
+.caseMainInfo
+  .van-col-12
+    .van-cell
+      padding-left: 0
+    @media(max-width: 759px)
+      width: 100%
+.caseNameSelected
+  border: 0
+  appearance: none
+  -moz-appearance: none
+  -webkit-appearance: none
+.float-right
+  float: right
+  font-size: 14px
+  color: #333
+.noselect
+  cursor: pointer
+  -webkit-touch-callout: none
+  webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  user-select: none
+.paddingLeftS
+  padding-left: 0
+  margin-left: 0
+.infoBtn
+  button
+    width: 60%
+    margin: 20px 0
 </style>
 

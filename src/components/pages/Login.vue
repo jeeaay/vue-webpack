@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-21 11:08:49
+ * @Last Modified time: 2018-03-29 14:36:27
  */
 <template>
   <div class="containerWrap">
@@ -12,8 +12,10 @@
         <van-field v-model="username" label="用户名" icon="clear" placeholder="请输入用户名" @click-icon="username = ''" @keyup.enter.native="login"/>
 
         <van-field v-model="password" type="password" label="密码" placeholder="请输入密码" @keyup.enter.native="login"/>
-        <van-button type="primary" @click.native="login()">提交</van-button>
-        <van-button type="danger">取消</van-button>
+        <div class="loginBtn">
+          <van-button type="primary" @click.native="login()">提交</van-button>
+          <van-button type="danger">取消</van-button>
+        </div>
       </van-cell-group>
     </div>
   </div>
@@ -32,12 +34,18 @@ export default {
       password: ''
     }
   },
-  mounted () {},
+  mounted () {
+    let nowTime = new Date()
+    let token = localStorage.getItem('access_token')
+    if (token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000)) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
+      this.$router.push({path: '/public/cases'})
+    }
+  },
   methods: {
     login () {
       const self = this
       if (this.username !== '' && this.password !== '') {
-        axios.post('/apis/login', qs.stringify({
+        axios.post('/login', qs.stringify({
           username: this.username,
           password: this.password
         }))
@@ -55,7 +63,7 @@ export default {
             localStorage.setItem('real_name', responseData.real_name)
             setTimeout(function () {
               self.$router.push({
-                path: '/public/users'
+                path: '/public/cases'
               })
             }, 100)
           }
@@ -108,5 +116,8 @@ export default {
 }
 .van-button--normal {
   padding: 0 25px;
+}
+.loginBtn{
+  text-align: center;
 }
 </style>
