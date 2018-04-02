@@ -34,6 +34,7 @@ axios.defaults.timeout = 2000
 // // http request 拦截器
 axios.interceptors.request.use(
   config => {
+    vu.isLoading = true
     // let token = localStorage.getItem('access_token')
     // let nowTime = new Date()
     // if (token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000)) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
@@ -47,7 +48,7 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
-    window.isLoading = false
+    vu.isLoading = false
     if (response.data.error) {
       switch (response.data.error) {
         case 401:
@@ -96,10 +97,10 @@ axios.interceptors.response.use(
 )
 
 /* eslint-disable no-new */
-new Vue({
+let vu = new Vue({
   el: '#app',
   router,
-  template: '<App/>',
+  template: '<App :isLoading=\'isLoading\' />',
   components: { App },
   data () {
     return {

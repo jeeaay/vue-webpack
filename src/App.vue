@@ -13,7 +13,8 @@
 <script>
 require('./assets/style.sass')
 export default {
-  name: 'app'
+  name: 'app',
+  props: ['isLoading']
 }
 </script>
 <style lang="css" scoped>
@@ -37,6 +38,7 @@ export default {
   top:0;
   left: 0;
   background: rgba(0, 0, 0, .5);
+  z-index: 9999;
 }
 .van-loading{
     margin: 0 auto;
