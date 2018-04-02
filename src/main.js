@@ -28,8 +28,8 @@ Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 
 // axios 配置
-axios.defaults.timeout = 2000
-// axios.defaults.baseURL = 'https://case.lmzg.com/v1/'
+
+axios.defaults.baseURL = 'https://case.lmzg.com/v1/'
 
 // // http request 拦截器
 axios.interceptors.request.use(
@@ -82,6 +82,7 @@ axios.interceptors.response.use(
     return response
   },
   error => {
+    vu.isLoading = false
     Dialog.alert({
       title: '错误',
       message: '请重新登录'

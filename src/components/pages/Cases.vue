@@ -423,7 +423,7 @@ let GetCaseList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/lcase/?access_token=' + usertoken + '&page=' + currentPage
+      let url = '/lcase/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
         resolve(response.data.data)
@@ -497,7 +497,7 @@ export default {
     }
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/cate/?access_token=' + usertoken
+      let url = '/cate/?access_token=' + usertoken
       axios.get(url)
       .then(response => {
         this.cateList = response.data.data
@@ -513,7 +513,7 @@ export default {
         if (this.catePage >= 2) {
           for (let cateP = 2; cateP <= this.catePage; cateP++) {
             let usertoken = localStorage.getItem('access_token')
-            let url = '/apis/cate/?access_token=' + usertoken + '&page=' + cateP
+            let url = '/cate/?access_token=' + usertoken + '&page=' + cateP
             axios.get(url)
             .then(response => {
               this.cates = this.cates.concat(response.data.data.cateList)
@@ -546,7 +546,7 @@ export default {
     caseInfoAddImage (file) {
       this.caseImageInfos.push(file.content)
       let addImage = file.content
-      let url = '/apis/imgmanage/add/' + this.caseInfo.case_id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/imgmanage/add/' + this.caseInfo.case_id + '?access_token=' + localStorage.getItem('access_token')
       axios.post(url, qs.stringify({
         case_id: this.caseInfo.case_id,
         img: addImage
@@ -555,7 +555,7 @@ export default {
     async openCaseInfo (index) {
       this.show = true
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/lcase/' + index + '?access_token=' + usertoken
+      let url = '/lcase/' + index + '?access_token=' + usertoken
       let readcase = await axios(url)
       this.caseInfo = readcase['data']['data']
       this.caseImageInfos = JSON.parse(this.caseInfo.img_path)
@@ -571,7 +571,7 @@ export default {
     },
     deleteImage (index) {
       let delo = this.caseImageInfos.splice(index, 1)
-      let url = '/apis/imgmanage/del?access_token=' + localStorage.getItem('access_token')
+      let url = '/imgmanage/del?access_token=' + localStorage.getItem('access_token')
       axios.post(url, qs.stringify({
         case_id: this.caseInfo.case_id,
         imgarr: JSON.stringify(this.caseImageInfos),
@@ -582,7 +582,7 @@ export default {
       this.imagArrs.splice(index, 1)
     },
     onKeyup (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
@@ -605,7 +605,7 @@ export default {
       }, 500)
     },
     change (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         axios.put(url, qs.stringify({
@@ -614,7 +614,7 @@ export default {
       }, 500)
     },
     clickChange (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
@@ -625,7 +625,7 @@ export default {
       }, 500)
     },
     onClickAlert () {
-      let url = '/apis/lcase/?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/?access_token=' + localStorage.getItem('access_token')
       if (this.addCaseTitle !== '') {
         axios.post(url, qs.stringify({
           title: this.addCaseTitle,
@@ -670,7 +670,7 @@ export default {
       }
     },
     deleteCase (id) {
-      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       axios.delete(url)
         .then((response) => {
           Dialog.alert({
