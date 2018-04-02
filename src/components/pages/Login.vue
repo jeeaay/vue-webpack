@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-29 14:36:27
+ * @Last Modified time: 2018-04-02 09:03:00
  */
 <template>
   <div class="containerWrap">
@@ -45,7 +45,7 @@ export default {
     login () {
       const self = this
       if (this.username !== '' && this.password !== '') {
-        axios.post('/login', qs.stringify({
+        axios.post('/apis/login', qs.stringify({
           username: this.username,
           password: this.password
         }))

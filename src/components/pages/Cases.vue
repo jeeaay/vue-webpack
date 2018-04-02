@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-30 14:47:46
+ * @Last Modified time: 2018-04-02 15:33:16
  */
 <template>
   <div class="container content">
@@ -14,7 +14,7 @@
         <van-icon name="add-o" />添加案例</van-button>
     </div>
     <h2>案例列表</h2>
-    <van-row class="cateList">
+    <van-row class="cateList" gutter="20">
       <van-col span="12" v-for="(item,index) in cases" :key="item.pub_date" @click.native="openCaseInfo(index)">
         <van-cell-group>
           <van-row>
@@ -92,8 +92,7 @@
           </van-row>
           <div class="other">
             <van-row>
-              <van-col span="12" class="widthS">案例类型：</van-col>
-              <van-col span="12">
+              <van-col span="12">案例类型：
                 <select v-model="selected" class="selectCase paddingLeftS" @change='change(caseInfo.case_id)'>
                   <option>请选择分类</option>
                   <option v-for="cate in cates" v-bind:value="cate.cate_id" :key="cate.cate_id">
@@ -102,12 +101,10 @@
                 </select>
                 <span class="fontS">选中的是：分类 {{ selected }}</span>
               </van-col>
-              <van-col span="12" class="widthS">是否为国际：</van-col>
               <van-col span="12">
-                <van-row>
-                  <van-col span="12"><van-radio name="1" v-model="radio" @click='clickChange(caseInfo.case_id)'>是</van-radio></van-col>
-                  <van-col span="12"><van-radio name="0" v-model="radio" @click='clickChange(caseInfo.case_id)'>不是</van-radio></van-col>
-                </van-row>
+                  <div class="ina">是否为国际：</div>
+                  <van-radio name="1" v-model="radio" @click='clickChange(caseInfo.case_id)'>是</van-radio>
+                  <van-radio name="0" v-model="radio" @click='clickChange(caseInfo.case_id)'>不是</van-radio>
               </van-col>
             </van-row>
           </div>
@@ -229,7 +226,7 @@
           </div>
           <van-row>
             <van-col span="12" class="infoBtn">
-              <van-button type="default" @click="show = false">返回案例列表</van-button>
+              <van-button type="default" @click="show = false">返回列表</van-button>
             </van-col>
             <van-col span="12" class="infoBtn">
               <van-button type="danger" @click.native="deleteCase(caseInfo.case_id)">删除案例</van-button>
@@ -426,7 +423,7 @@ let GetCaseList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/lcase/?access_token=' + usertoken + '&page=' + currentPage
+      let url = '/apis/lcase/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
         resolve(response.data.data)
@@ -465,7 +462,7 @@ export default {
       catePage: '',
       addCaseTitle: '',
       dep: '',
-      dep_user: '',
+      dep_user: localStorage.getItem('real_name'),
       info_source: '',
       scene: '',
       equipment: '',
@@ -500,7 +497,7 @@ export default {
     }
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/cate/?access_token=' + usertoken
+      let url = '/apis/cate/?access_token=' + usertoken
       axios.get(url)
       .then(response => {
         this.cateList = response.data.data
@@ -516,7 +513,7 @@ export default {
         if (this.catePage >= 2) {
           for (let cateP = 2; cateP <= this.catePage; cateP++) {
             let usertoken = localStorage.getItem('access_token')
-            let url = '/cate/?access_token=' + usertoken + '&page=' + cateP
+            let url = '/apis/cate/?access_token=' + usertoken + '&page=' + cateP
             axios.get(url)
             .then(response => {
               this.cates = this.cates.concat(response.data.data.cateList)
@@ -549,7 +546,7 @@ export default {
     caseInfoAddImage (file) {
       this.caseImageInfos.push(file.content)
       let addImage = file.content
-      let url = '/imgmanage/add/' + this.caseInfo.case_id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/imgmanage/add/' + this.caseInfo.case_id + '?access_token=' + localStorage.getItem('access_token')
       axios.post(url, qs.stringify({
         case_id: this.caseInfo.case_id,
         img: addImage
@@ -558,7 +555,7 @@ export default {
     async openCaseInfo (index) {
       this.show = true
       let usertoken = localStorage.getItem('access_token')
-      let url = '/lcase/' + index + '?access_token=' + usertoken
+      let url = '/apis/lcase/' + index + '?access_token=' + usertoken
       let readcase = await axios(url)
       this.caseInfo = readcase['data']['data']
       this.caseImageInfos = JSON.parse(this.caseInfo.img_path)
@@ -574,7 +571,7 @@ export default {
     },
     deleteImage (index) {
       let delo = this.caseImageInfos.splice(index, 1)
-      let url = '/imgmanage/del?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/imgmanage/del?access_token=' + localStorage.getItem('access_token')
       axios.post(url, qs.stringify({
         case_id: this.caseInfo.case_id,
         imgarr: JSON.stringify(this.caseImageInfos),
@@ -585,7 +582,7 @@ export default {
       this.imagArrs.splice(index, 1)
     },
     onKeyup (id) {
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
@@ -608,7 +605,7 @@ export default {
       }, 500)
     },
     change (id) {
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         axios.put(url, qs.stringify({
@@ -617,7 +614,7 @@ export default {
       }, 500)
     },
     clickChange (id) {
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
@@ -628,7 +625,7 @@ export default {
       }, 500)
     },
     onClickAlert () {
-      let url = '/lcase/?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/?access_token=' + localStorage.getItem('access_token')
       if (this.addCaseTitle !== '') {
         axios.post(url, qs.stringify({
           title: this.addCaseTitle,
@@ -673,7 +670,7 @@ export default {
       }
     },
     deleteCase (id) {
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       axios.delete(url)
         .then((response) => {
           Dialog.alert({
@@ -693,6 +690,8 @@ export default {
 .cateList
   .van-col-12
     margin-bottom: 10px
+    float: none
+    display: inline-block
     @media(max-width: 1000px)
       width: 100%
       margin-bottom: 20px
@@ -735,6 +734,7 @@ export default {
         float: right
         @media(max-width: 759px)
           float: none
+          margin-bottom: 10px
         margin-top: 15px
     .casePic
       .van-col-6
@@ -819,6 +819,11 @@ export default {
     padding-left: 0
     padding-right: 0
 .other
+  @media(max-width: 759px)
+    .van-col-12
+      width: 100%
+    .selectCase
+      width: 40%
 .caseMainInfo
   .van-col-12
     .van-cell
@@ -844,7 +849,7 @@ export default {
   user-select: none
 .paddingLeftS
   padding-left: 0
-  margin-left: 0
+  margin-left: 16px
 .infoBtn
   button
     width: 60%

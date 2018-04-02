@@ -5,8 +5,9 @@ import App from './App'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
-import { Radio, Uploader, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
+import { Radio, Loading, Uploader, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
 Vue.use(Panel)
+Vue.use(Loading)
 Vue.use(Uploader)
 Vue.use(Radio)
 Vue.use(Field)
@@ -28,25 +29,25 @@ Vue.config.productionTip = false
 
 // axios 配置
 axios.defaults.timeout = 2000
-axios.defaults.baseURL = 'https://case.lmzg.com/v1/'
+// axios.defaults.baseURL = 'https://case.lmzg.com/v1/'
 
 // // http request 拦截器
-/* axios.interceptors.request.use(
+axios.interceptors.request.use(
   config => {
-    let token = localStorage.getItem('access_token')
-    let nowTime = new Date()
-    if (token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000)) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
-      config.headers.Authorization = token
-    }
+    // let token = localStorage.getItem('access_token')
+    // let nowTime = new Date()
+    // if (token && (nowTime.getTime() < localStorage.getItem('expires_time') * 1000)) {  // 每次发送请求之前判断是否存在token，如果存在，则统一在http请求的header都加上token，不用每次请求都手动添加了
+    //   config.headers.Authorization = token
+    // }
     return config
   },
   err => {
     return Promise.reject(err)
   })
- */
 // http response 拦截器
 axios.interceptors.response.use(
   response => {
+    window.isLoading = false
     if (response.data.error) {
       switch (response.data.error) {
         case 401:
@@ -99,5 +100,10 @@ new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: { App },
+  data () {
+    return {
+      isLoading: false
+    }
+  }
 })

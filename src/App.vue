@@ -4,6 +4,9 @@
       <transition name="slide">
         <router-view></router-view>
       </transition>
+      <div class="loading" v-show="isLoading">
+        <van-loading type="spinner" color="white" size="40px"/>
+      </div>
   </div>
 </template>
 
@@ -27,4 +30,17 @@ export default {
     opacity:0;
     transition:opacity .5s;
   }
+.loading{
+  width: 100%;
+  height: 100%;
+  position:fixed;
+  top:0;
+  left: 0;
+  background: rgba(0, 0, 0, .5);
+}
+.van-loading{
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
+}
 </style>
