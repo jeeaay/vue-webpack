@@ -5,10 +5,11 @@ import App from './App'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
-import { Radio, Loading, Uploader, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
+// import Uploader from './components/common/Uploader'
+import { Radio, Loading, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
+// import { Radio, Loading, Uploader, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
 Vue.use(Panel)
 Vue.use(Loading)
-Vue.use(Uploader)
 Vue.use(Radio)
 Vue.use(Field)
 Vue.use(Row)
@@ -25,11 +26,12 @@ Vue.use(Switch)
 Vue.use(Checkbox)
 Vue.use(CheckboxGroup)
 Vue.use(VueAxios, axios)
+// Vue.use(Uploader)
 Vue.config.productionTip = false
 
 // axios 配置
 
-axios.defaults.baseURL = 'https://case.lmzg.com/v1/'
+// axios.defaults.baseURL = 'https://case.lmzg.com/v1/'
 
 // // http request 拦截器
 axios.interceptors.request.use(
@@ -84,14 +86,14 @@ axios.interceptors.response.use(
   error => {
     vu.isLoading = false
     Dialog.alert({
-      title: '错误',
-      message: '请重新登录'
+      title: '发生错误',
+      message: '请检查网络或尝试重新登录'
     }).then(() => {
-      localStorage.clear()
-      router.replace({
-        path: '/',
-        query: { redirect: router.currentRoute.fullPath }
-      })
+      // localStorage.clear()
+      // router.replace({
+      //   path: '/',
+      //   query: { redirect: router.currentRoute.fullPath }
+      // })
     })
     return Promise.reject(error)
   }
