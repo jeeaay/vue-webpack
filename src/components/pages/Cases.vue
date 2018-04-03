@@ -19,7 +19,8 @@
         <van-cell-group>
           <van-row>
             <van-col span="9">
-              <img :src="JSON.parse(item.img_path.replace(/\\\\/g, '/'))[0]">
+              <!-- <img :src="JSON.parse(item.img_path.replace(/\\\\/g, '/'))"> -->
+              <img :src="!item.img_path ? '' : JSON.parse(item.img_path.replace(/\\\\/g, '/'))[0]">
             </van-col>
             <van-col span="15">
               <p>{{item.title}}</p>
@@ -193,8 +194,8 @@
             <!-- <van-uploader :after-read="caseInfoAddImage" accept="image/png, image/gif, image/jpeg" multiple result-type="null">
               <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
             </van-uploader> -->
-            <uploader>
-              <span>上传图片1</span> <van-icon name="photograph" class="iconFont"/>
+            <uploader v-on:uploadImgFile="onChangeImgList">
+              <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
             </uploader>
           </van-button>
           <h3>客户详情：</h3>
@@ -381,7 +382,6 @@
                 <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
               </uploader>
             </van-button>
-            <van-button type="default" class="upload" @click="clearImage">清空上传列表 <van-icon name="delete" /></van-button>
             <van-row class="casePic addpic" gutter="20">
               <van-col span="3" v-for="(imagArr,index) of imagArrs" :key='imagArr'>
                 <img :src="imagArr">
@@ -550,7 +550,7 @@ export default {
     clearImage () {
       this.imagArrs = []
     },
-    async logContent (file) {
+    /* async logContent (file) {
       console.log(file)
       let resp = await axios.post('/apis/imgmanage/add/?access_token=' + localStorage.getItem('access_token'), qs.stringify({
         type: file.file.type,
@@ -568,14 +568,19 @@ export default {
         case_id: this.caseInfo.case_id,
         img: addImage
       }))
-    },
+    }, */
+
     async openCaseInfo (index) {
       this.show = true
       let usertoken = localStorage.getItem('access_token')
       let url = '/apis/lcase/' + index + '?access_token=' + usertoken
       let readcase = await axios(url)
       this.caseInfo = readcase['data']['data']
-      this.caseImageInfos = JSON.parse(this.caseInfo.img_path)
+      if (!this.caseInfo.img_path) {
+        this.caseImageInfos = []
+      } else {
+        this.caseImageInfos = JSON.parse(this.caseInfo.img_path)
+      }
       this.caseTime = upDataToTime(this.caseInfo.pub_date)
       this.updatatime = upDataToTime(this.caseInfo.up_date)
       if (this.caseInfo.type_id === null || this.caseInfo.type_id === '') {
@@ -594,7 +599,6 @@ export default {
       }
       this.caseImageInfos.splice(index, 1)
       data.imgarr = this.caseImageInfos
-      console.log(qs.stringify(data))
       let url = '/apis/imgmanage/del?access_token=' + localStorage.getItem('access_token')
       await axios.post(url, qs.stringify(data))
     },
@@ -608,6 +612,14 @@ export default {
       param.append('img', file, file.name)
       let response = await axios.post('/apis/imgmanage/add/?access_token=' + localStorage.getItem('access_token'), param, {headers: {'Content-Type': 'multipart/form-data'}})
       this.imagArrs.push(response.data.data.imgpath)
+    },
+    async onChangeImgList (file) {
+      let param = new FormData()
+      let url = '/apis/imgmanage/add/?access_token=' + localStorage.getItem('access_token')
+      param.append('img', file, file.name)
+      url = url + '&case_id=' + this.caseInfo.case_id
+      let response = await axios.post(url, param, {headers: {'Content-Type': 'multipart/form-data'}})
+      this.caseImageInfos.push(response.data.data.imgpath)
     },
     onKeyup (id) {
       let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
