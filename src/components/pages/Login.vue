@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-04-02 09:03:00
+ * @Last Modified time: 2018-04-04 14:34:41
  */
 <template>
   <div class="containerWrap">
@@ -14,7 +14,7 @@
         <van-field v-model="password" type="password" label="密码" placeholder="请输入密码" @keyup.enter.native="login"/>
         <div class="loginBtn">
           <van-button type="primary" @click.native="login()">提交</van-button>
-          <van-button type="danger">取消</van-button>
+          <van-button type="primary" class="signIn" @click="signIn()">注册</van-button>
         </div>
       </van-cell-group>
     </div>
@@ -45,7 +45,7 @@ export default {
     login () {
       const self = this
       if (this.username !== '' && this.password !== '') {
-        axios.post('/apis/login', qs.stringify({
+        axios.post('/login', qs.stringify({
           username: this.username,
           password: this.password
         }))
@@ -74,6 +74,11 @@ export default {
           message: '请填写用户名和密码'
         })
       }
+    },
+    signIn () {
+      this.$router.push({
+        path: '/signIn'
+      })
     }
   }
 }

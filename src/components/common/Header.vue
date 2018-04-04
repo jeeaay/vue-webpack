@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-27 15:31:52
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-29 11:22:29
+ * @Last Modified time: 2018-04-04 15:16:44
  */
 <template>
   <div class="public">
@@ -18,7 +18,7 @@
           <van-col span="5" class="logoTitle">{{message}}</van-col>
           <van-col span="15" class="menu">
             <van-row class="menuList">
-              <van-col span="8" v-for="item in items" :key="item.id">
+              <van-col span="6" v-for="item in items" :key="item.id">
                 <router-link :to="{name:(item.name),params:{pageName:(item.description)}}">{{item.description}}</router-link>
               </van-col>
             </van-row>
@@ -57,6 +57,7 @@ export default {
       leftSlider: false,
       mask: false,
       items: [
+        { name: '审核用户', description: '审核用户' },
         { name: '用户管理', description: '用户管理' },
         { name: '分类管理', description: '分类管理' },
         { name: '案例管理', description: '案例管理' }

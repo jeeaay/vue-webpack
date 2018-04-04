@@ -57,7 +57,7 @@ let GetCateList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/apis/cate/?access_token=' + usertoken + '&page=' + currentPage
+      let url = '/cate/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
         resolve(response.data.data)
@@ -94,7 +94,7 @@ export default {
       this.cateInfo = this.cates[index]
     },
     deleteCate (id) {
-      let url = '/apis/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
       axios.delete(url)
         .then((response) => {
           Dialog.alert({
@@ -106,7 +106,7 @@ export default {
         })
     },
     onKeyup (id) {
-      let url = '/apis/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/cate/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.cateInfo.cate_name !== '') {
@@ -117,7 +117,7 @@ export default {
       }, 500)
     },
     onClickAlert () {
-      let url = '/apis/cate/?access_token=' + localStorage.getItem('access_token')
+      let url = '/cate/?access_token=' + localStorage.getItem('access_token')
       if (this.addUser !== '') {
         axios.post(url, qs.stringify({
           cate_name: this.addCate
