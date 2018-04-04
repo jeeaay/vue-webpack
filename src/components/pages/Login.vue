@@ -45,7 +45,7 @@ export default {
     login () {
       const self = this
       if (this.username !== '' && this.password !== '') {
-        axios.post('/apis/login', qs.stringify({
+        axios.post('/login', qs.stringify({
           username: this.username,
           password: this.password
         }))
