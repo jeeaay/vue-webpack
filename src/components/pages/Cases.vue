@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-04-02 15:33:16
+ * @Last Modified time: 2018-04-04 16:21:54
  */
 <template>
   <div class="container content">
@@ -194,7 +194,7 @@
             <!-- <van-uploader :after-read="caseInfoAddImage" accept="image/png, image/gif, image/jpeg" multiple result-type="null">
               <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
             </van-uploader> -->
-            <uploader v-on:uploadImgFile="onChangeImgList">
+            <uploader @uploadImgFile="onChangeImgList">
               <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
             </uploader>
           </van-button>
@@ -378,12 +378,12 @@
               <!-- <van-uploader :after-read="logContent" accept="image/png, image/gif, image/jpeg" multiple result-type="text">
                 <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
               </van-uploader> -->
-              <uploader v-on:uploadImgFile="onUploadImgFile">
+              <uploader @uploadImgFile="onUploadImgFile">
                 <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
               </uploader>
             </van-button>
             <van-row class="casePic addpic" gutter="20">
-              <van-col span="3" v-for="(imagArr,index) of imagArrs" :key='imagArr'>
+              <van-col span="6" v-for="(imagArr,index) of imagArrs" :key='imagArr'>
                 <img :src="imagArr">
                 <div class="deleteImage" @click="adddeleteImage(index)"><van-icon name="clear" /></div>
               </van-col>
@@ -536,11 +536,7 @@ export default {
   },
   methods: {
     showToggle () {
-      if (this.isShow === true) {
-        this.isShow = false
-      } else {
-        this.isShow = true
-      }
+      this.isShow = !this.isShow
     },
     async onChange () {
       let data = await GetCaseList(this.currentPage)
@@ -550,31 +546,10 @@ export default {
     clearImage () {
       this.imagArrs = []
     },
-    /* async logContent (file) {
-      console.log(file)
-      let resp = await axios.post('/imgmanage/add/?access_token=' + localStorage.getItem('access_token'), qs.stringify({
-        type: file.file.type,
-        img: file.content
-      }))
-      console.log(resp)
-      this.imagArrs.push(file.content)
-    },
-    caseInfoAddImage (file) {
-      // console.log(file)
-      this.caseImageInfos.push(file.content)
-      let addImage = file.content
-      let url = '/imgmanage/add/' + this.caseInfo.case_id + '?access_token=' + localStorage.getItem('access_token')
-      axios.post(url, qs.stringify({
-        case_id: this.caseInfo.case_id,
-        img: addImage
-      }))
-    }, */
-
     async openCaseInfo (index) {
       this.show = true
       let usertoken = localStorage.getItem('access_token')
-      let url = '/lcase/' + index + '?access_token=' + usertoken
-      let readcase = await axios(url)
+      let readcase = await axios('/lcase/' + this.cases[index]['case_id'] + '?access_token=' + usertoken)
       this.caseInfo = readcase['data']['data']
       if (!this.caseInfo.img_path) {
         this.caseImageInfos = []
@@ -893,5 +868,7 @@ export default {
   button
     width: 60%
     margin: 20px 0
+.cateList
+  .van-col-15
+    padding-left: 10px
 </style>
-

@@ -89,11 +89,11 @@ axios.interceptors.response.use(
       title: '发生错误',
       message: '请检查网络或尝试重新登录'
     }).then(() => {
-      // localStorage.clear()
-      // router.replace({
-      //   path: '/',
-      //   query: { redirect: router.currentRoute.fullPath }
-      // })
+      localStorage.clear()
+      router.replace({
+        path: '/',
+        query: { redirect: router.currentRoute.fullPath }
+      })
     })
     return Promise.reject(error)
   }
