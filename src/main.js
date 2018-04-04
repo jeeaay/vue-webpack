@@ -65,6 +65,14 @@ axios.interceptors.response.use(
             })
           })
           break
+        case 403:
+          Dialog.alert({
+            title: '403 Error: 操作被拒绝',
+            message: response.data.message
+          }).then(() => {
+            router.go(-1)
+          })
+          break
         case 404:
           // 401 清除token信息并跳转到登录页面
           Dialog.alert({

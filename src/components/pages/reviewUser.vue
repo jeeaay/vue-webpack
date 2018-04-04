@@ -70,7 +70,7 @@ export default {
     reviewUser (index) {
       let url = '/newuser/?access_token=' + this.newusers[index].user_id + localStorage.getItem('access_token')
       this.checked[index] = true
-      axios.update(url, qs.stringify({
+      axios.put(url, qs.stringify({
       }))
       .then((response) => {
         Dialog.alert({
