@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-04-09 08:14:22
+ * @Last Modified time: 2018-04-09 08:44:23
  */
 <template>
   <div class="containerWrap">
@@ -10,7 +10,7 @@
       <h1 class="signInTitle">{{ title }}</h1>
       <van-cell-group class="">
         <van-field v-model="username" required label="用户名" icon="clear" placeholder="请输入用户名" @click-icon="username = ''"/>
-        <van-field v-model="realname" required label="真实信息" placeholder="请输入真实信息"/>
+        <van-field v-model="realname" required label="真实姓名" placeholder="请输入真实姓名"/>
         <van-field v-model="password" required type="password" label="密码" placeholder="请输入密码"/>
         <van-field v-model="repassword" required type="password" label="确认密码" placeholder="请再次输入密码" @keyup.enter.native="JoinIn"/>
         <div class="signInBtn">
@@ -73,7 +73,7 @@ export default {
       } else {
         Dialog.alert({
           title: '注册失败',
-          message: '请填写用户名和真实信息'
+          message: '请填写用户名和真实姓名'
         })
       }
     },

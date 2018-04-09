@@ -6,10 +6,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import router from './router'
 // import Uploader from './components/common/Uploader'
-import { Radio, Loading, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
+import { Radio, Loading, DatetimePicker, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
 // import { Radio, Loading, Uploader, Panel, Row, Col, Field, Icon, Button, Switch, Checkbox, CheckboxGroup, Cell, CellGroup, Pagination, Popup, Dialog } from 'vant'
 Vue.use(Panel)
 Vue.use(Loading)
+Vue.use(DatetimePicker)
 Vue.use(Radio)
 Vue.use(Field)
 Vue.use(Row)

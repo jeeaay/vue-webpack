@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:41:52
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-03-29 14:38:41
+ * @Last Modified time: 2018-04-09 08:43:28
  */
 <template>
   <div class="container content">
@@ -19,7 +19,7 @@
         <van-row>
           <van-col span="12" v-for="(item,index) in users" :key="item.user_id" @click.native="openUserInfo(index)">
             <van-cell-group>
-              <van-cell :title="item.user_name" is-link value="详细信息"/>
+              <van-cell :title="item.real_name" is-link value="详细信息"/>
             </van-cell-group>
           </van-col>
         </van-row>
