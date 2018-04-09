@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-27 15:31:52
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-04-04 15:16:44
+ * @Last Modified time: 2018-04-09 08:09:50
  */
 <template>
   <div class="public">
@@ -57,7 +57,6 @@ export default {
       leftSlider: false,
       mask: false,
       items: [
-        { name: '审核用户', description: '审核用户' },
         { name: '用户管理', description: '用户管理' },
         { name: '分类管理', description: '分类管理' },
         { name: '案例管理', description: '案例管理' }

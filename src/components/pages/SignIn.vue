@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:04
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-04-04 15:25:47
+ * @Last Modified time: 2018-04-09 08:14:22
  */
 <template>
   <div class="containerWrap">
@@ -53,6 +53,10 @@ export default {
                 message: response.data.message
               })
             } else {
+              Dialog.alert({
+                title: '注册成功',
+                message: response.data.message
+              })
               setTimeout(function () {
                 self.$router.push({
                   path: '/'

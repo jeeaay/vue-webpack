@@ -3,7 +3,6 @@ import Router from 'vue-router'
 import Index from '@/components/pages/Index'
 import Home from '@/components/common/Home'
 import Users from '@/components/pages/Users'
-import reviewUser from '@/components/pages/ReviewUser'
 import Cates from '@/components/pages/Cates'
 import Cases from '@/components/pages/Cases'
 import Xiugai from '@/components/pages/Xiugai'
@@ -44,7 +43,6 @@ let router = new Router({
       children: [
         { path: '/', component: Index, name: '首页', meta: { title: '案例采集后台管理' } },
         { path: 'users', component: Users, name: '用户管理', meta: { title: '用户管理' } },
-        { path: 'reviewUser', component: reviewUser, name: '审核用户', meta: { title: '审核用户' } },
         { path: 'category', component: Cates, name: '分类管理', meta: { title: '分类管理' } },
         { path: 'cases', component: Cases, name: '案例管理', meta: { title: '案例管理' } },
         { path: 'xiugai', component: Xiugai, name: '修改密码', meta: { title: '修改密码' } }
