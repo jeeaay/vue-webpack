@@ -2,7 +2,7 @@
  * @Author: londy
  * @Date: 2018-02-24 16:42:12
  * @Last Modified by: hs.londy
- * @Last Modified time: 2018-04-09 16:48:53
+ * @Last Modified time: 2018-04-17 11:21:31
  */
 <template>
   <div class="container content">
@@ -10,7 +10,7 @@
       <p>当前位置：{{$route.name}}</p>
     </div>
     <div class="casesContent">
-      <van-button type="primary" @click="addCase = true">
+      <van-button type="primary" @click="addCase()">
         <van-icon name="add-o" />添加案例</van-button>
     </div>
     <h2>案例列表</h2>
@@ -266,215 +266,6 @@
           </van-row>
         </div>
     </van-popup>
-    <div class="addCase clearfix">
-      <van-popup v-model="addCase" position="top" class="caseInfo addCaseInfo">
-          <div class="caseInfoBox">
-            <div class="top clearfix">
-            <van-cell-group class="caseTitleInput">
-              <van-field
-                v-model="addCaseTitle"
-                icon="clear"
-                placeholder="请输入案例标题"
-                @click-icon="caseTitle = ''"
-                class="caseTitle"
-              />
-            </van-cell-group>
-              <div class="addAu">
-                <p>发布时间：<span>{{addCaseTime}}</span></p>
-                <p>作者：{{caseAu}}</p>
-              </div>
-            </div>
-            <van-row class="caseMainInfo">
-              <van-cell-group>
-                  <van-col span="12">
-                    <van-field
-                      v-model="dep"
-                      label="部门："
-                      icon="clear"
-                      placeholder="请输入采集部门"
-                      @click-icon="dep = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="dep_user"
-                      label="填写人："
-                      icon="clear"
-                      placeholder="请输入填写人员"
-                      @click-icon="dep_user = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="info_source"
-                      label="联系方式："
-                      icon="clear"
-                      placeholder="请输入联系方式"
-                      @click-icon="info_source = ''"
-                    />
-                  </van-col>
-              </van-cell-group>
-            </van-row>
-            <div class="other">
-              <van-row>
-                <van-col span="12">
-                  案例类型：
-                  <select v-model="addSelected" class="selectCase">
-                    <option>请选择分类</option>
-                    <option v-for="addCaseCate in addCaseCates" v-bind:value="addCaseCate.cate_id" :key="addCaseCate.cate_id">
-                      {{addCaseCate.cate_name}}
-                    </option>
-                  </select>
-                  <span class="fontS">{{descript}}{{addSelected}}</span>
-                </van-col>
-                <!-- <van-col span="12">
-                  <div class="ina">是否为国际：</div>
-                  <van-radio name="1" v-model="addRadio">是</van-radio>
-                  <van-radio name="0" v-model="addRadio">不是</van-radio>
-                </van-col> -->
-              </van-row>
-            </div>
-            <van-row class="caseMainInfo">
-              <van-cell-group>
-                  <van-col span="12">
-                    <van-field
-                      v-model="productionAreas"
-                      label="投产地区"
-                      icon="clear"
-                      placeholder="如是国际案例，中英文均需填写"
-                      @click-icon="productionAreas = ''"
-                    />
-                  </van-col>
-                  <van-col span="12" class="dataTime">
-                    <van-field
-                      v-model="productionDate"
-                      label="投产时间"
-                      icon="clear"
-                      placeholder="投产时间"
-                      @click="dataTime()"
-                      @click-icon="productionDate = ''"
-                    />
-                    <van-datetime-picker
-                      v-model="currentDate"
-                      v-show="caseDataTime"
-                      type="date"
-                      :min-date="minDate"
-                      :max-date="maxDate"
-                      @cancel= "closeData"
-                      @confirm= "returnTime"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="equipment"
-                      label="设备配置："
-                      icon="clear"
-                      placeholder="请输入设备配置"
-                      @click-icon="equipment = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="material"
-                      label="加工物料："
-                      icon="clear"
-                      placeholder="如是国际案例，中英文均需填写"
-                      @click-icon="material = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="capacity"
-                      label="产量："
-                      icon="clear"
-                      placeholder="请输入产量"
-                      @click-icon="capacity = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="feed_size"
-                      label="进料粒度："
-                      icon="clear"
-                      placeholder="请输入进料粒度"
-                      @click-icon="feed_size = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="output_size"
-                      label="出料粒度："
-                      icon="clear"
-                      placeholder="请输入出料粒度"
-                      @click-icon="output_size = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="application"
-                      label="应用领域："
-                      icon="clear"       
-                      placeholder="请输入应用领域"
-                      @click-icon="application = ''"
-                    />
-                  </van-col>
-                  <van-col span="12">
-                    <van-field
-                      v-model="other"
-                      label="其他："
-                      icon="clear"
-                      placeholder="其他"
-                      @click-icon="other = ''"
-                    />
-                  </van-col>
-              </van-cell-group>
-            </van-row>
-            <h3>案例图集：</h3>
-            <van-button type="default" class="upload">
-              <!-- <van-uploader :after-read="logContent" accept="image/png, image/gif, image/jpeg" multiple result-type="text">
-                <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
-              </van-uploader> -->
-              <uploader @uploadImgFile="onUploadImgFile">
-                <span>上传图片</span> <van-icon name="photograph" class="iconFont"/>
-              </uploader>
-            </van-button>
-            <van-row class="casePic addpic" gutter="20">
-              <van-col span="6" v-for="(imagArr,index) of imagArrs" :key='imagArr'>
-                <img :src="imagArr">
-                <div class="deleteImage" @click="adddeleteImage(index)"><van-icon name="clear" /></div>
-              </van-col>
-            </van-row>
-            <h3>客户评价：</h3>
-            <div class="caseBody">
-              <van-cell-group>
-                <van-field
-                  v-model="addCaseContent"
-                  type="textarea"
-                  placeholder="请输入客户评价"
-                  rows="1"
-                  autosize
-                />
-              </van-cell-group>
-            </div>
-            <h3>工艺流程：</h3>
-            <div class="caseBody">
-              <van-cell-group>
-                <van-field
-                  v-model="scene"
-                  type="textarea"
-                  placeholder="请输入工艺流程"
-                  rows="1"
-                  autosize
-                />
-              </van-cell-group>
-            </div>
-            <van-row>
-                <van-col span="12" class="btnStyle"><van-button type="default" @click="addCase = false">取消</van-button></van-col>
-                <van-col span="12" class="btnStyle"><van-button type="primary" @click="onClickAlert">确认</van-button></van-col>
-            </van-row>
-          </div>
-      </van-popup>
-    </div>
   </div>
 </template>
 <script>
@@ -486,7 +277,7 @@ let GetCaseList = (currentPage) => {
   return new Promise((resolve, reject) => {
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/lcase/?access_token=' + usertoken + '&page=' + currentPage
+      let url = '/apis/lcase/?access_token=' + usertoken + '&page=' + currentPage
       axios.get(url)
       .then(response => {
         resolve(response.data.data)
@@ -509,26 +300,21 @@ function DataTime (data) {
 export default {
   data () {
     return {
-      addCaseBox: false,
       show: false,
       list: [],
       currentPage: 1,
       caseCate: '分类ID',
       radio: '',
-      addRadio: '0',
       cases: [],
-      images: [],
       dataTimeZ: '',
       totalCase: 0,
       caseInfo: [],
       selected: '',
-      addSelected: '',
       caseDataTime: false,
       zanf: [],
       caseTime: '',
       isShow: false,
       catePage: '',
-      addCaseTitle: '',
       productionAreas: '',
       minDate: new Date(1980, 10, 1),
       maxDate: new Date(),
@@ -553,9 +339,7 @@ export default {
       caseAu: '',
       imagArrs: [],
       descript: '您选择的分类是：',
-      cates: [],
-      addCaseCates: [],
-      addCase: false
+      cates: []
     }
   },
   components: {
@@ -568,19 +352,13 @@ export default {
     this.productionDate = DataTime(this.currentDate)
     this.cases = data.caseList
     this.totalCase = data.totalCase
-    if (this.addSelected === '') {
-      this.addSelected = '请选择分类'
-    } else {
-      this.descript = '您选择的分类是：'
-    }
     if (localStorage.getItem('access_token')) {
       let usertoken = localStorage.getItem('access_token')
-      let url = '/cate/?access_token=' + usertoken
+      let url = '/apis/cate/?access_token=' + usertoken
       axios.get(url)
       .then(response => {
         this.cateList = response.data.data
         this.cates = response.data.data.cateList
-        this.addCaseCates = response.data.data.cateList
         if (this.cateList.totalCate / 10 < 1) {
           this.catePage = 1
         } else if (this.cateList.totalCate / 10 === 0) {
@@ -591,11 +369,10 @@ export default {
         if (this.catePage >= 2) {
           for (let cateP = 2; cateP <= this.catePage; cateP++) {
             let usertoken = localStorage.getItem('access_token')
-            let url = '/cate/?access_token=' + usertoken + '&page=' + cateP
+            let url = '/apis/cate/?access_token=' + usertoken + '&page=' + cateP
             axios.get(url)
             .then(response => {
               this.cates = this.cates.concat(response.data.data.cateList)
-              this.addCaseCates = this.addCaseCates.concat(response.data.data.cateList)
             })
           }
         }
@@ -603,6 +380,9 @@ export default {
     }
   },
   methods: {
+    addCase () {
+      this.$router.push('/addcase')
+    },
     dataTime () {
       this.caseDataTime = true
     },
@@ -616,7 +396,7 @@ export default {
     async postTime (id) {
       this.dataTimeZ = DataTime(this.currentDate2)
       this.caseDataTime = false
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       axios.put(url, qs.stringify({
         production_date: this.currentDate2
       }))
@@ -635,7 +415,7 @@ export default {
     async openCaseInfo (index) {
       this.show = true
       let usertoken = localStorage.getItem('access_token')
-      let readcase = await axios('/lcase/' + this.cases[index]['case_id'] + '?access_token=' + usertoken)
+      let readcase = await axios('/apis/lcase/' + this.cases[index]['case_id'] + '?access_token=' + usertoken)
       this.caseInfo = readcase['data']['data']
       this.dataTimeZ = DataTime(this.caseInfo.production_date)
       if (!this.caseInfo.img_path) {
@@ -661,30 +441,19 @@ export default {
       }
       this.caseImageInfos.splice(index, 1)
       data.imgarr = this.caseImageInfos
-      let url = '/imgmanage/del?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/imgmanage/del?access_token=' + localStorage.getItem('access_token')
       await axios.post(url, qs.stringify(data))
-    },
-    async adddeleteImage (index) {
-      let url = '/imgmanage/del?access_token=' + localStorage.getItem('access_token')
-      await axios.post(url, qs.stringify({delimg: this.imagArrs[index]}))
-      this.imagArrs.splice(index, 1)
-    },
-    async onUploadImgFile (file) {
-      let param = new FormData()
-      param.append('img', file, file.name)
-      let response = await axios.post('/imgmanage/add/?access_token=' + localStorage.getItem('access_token'), param, {headers: {'Content-Type': 'multipart/form-data'}})
-      this.imagArrs.push(response.data.data.imgpath)
     },
     async onChangeImgList (file) {
       let param = new FormData()
-      let url = '/imgmanage/add/?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/imgmanage/add/?access_token=' + localStorage.getItem('access_token')
       param.append('img', file, file.name)
       url = url + '&case_id=' + this.caseInfo.case_id
       let response = await axios.post(url, param, {headers: {'Content-Type': 'multipart/form-data'}})
       this.caseImageInfos.push(response.data.data.imgpath)
     },
     onKeyup (id) {
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
@@ -708,7 +477,7 @@ export default {
       }, 500)
     },
     change (id) {
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         axios.put(url, qs.stringify({
@@ -717,7 +486,7 @@ export default {
       }, 500)
     },
     clickChange (id) {
-      let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
+      let url = '/apis/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
       clearTimeout(window.t)
       window.t = setTimeout(() => {
         if (this.caseInfo.title !== '') {
@@ -726,136 +495,6 @@ export default {
           }))
         }
       }, 500)
-    },
-    onClickAlert () {
-      if (this.dep === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入采集部门'
-        })
-        return false
-      }
-      if (this.dep_user === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入填写人员'
-        })
-        return false
-      }
-      if (this.info_source === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入联系方式'
-        })
-        return false
-      }
-      if (this.productionAreas === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入投产地区'
-        })
-        return false
-      }
-      if (this.equipment === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入设备配置'
-        })
-        return false
-      }
-      if (this.material === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入加工物料'
-        })
-        return false
-      }
-      if (this.capacity === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入产量'
-        })
-        return false
-      }
-      if (this.feed_size === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入进料粒度'
-        })
-        return false
-      }
-      if (this.output_size === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入出料粒度'
-        })
-        return false
-      }
-      if (this.application === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入应用领域'
-        })
-        return false
-      }
-      if (this.addCaseContent === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入客户评价'
-        })
-        return false
-      }
-      if (this.scene === '') {
-        Dialog.alert({
-          title: '添加案例失败',
-          message: '请输入工艺流程'
-        })
-        return false
-      }
-      let url = '/lcase/?access_token=' + localStorage.getItem('access_token')
-      if (this.addCaseTitle !== '') {
-        axios.post(url, qs.stringify({
-          title: this.addCaseTitle,
-          dep: this.dep,
-          dep_user: this.dep_user,
-          info_source: this.info_source,
-          equipment: this.equipment,
-          material: this.material,
-          capacity: this.capacity,
-          feed_size: this.feed_size,
-          output_size: this.output_size,
-          application: this.application,
-          production_areas: this.productionAreas,
-          production_date: this.productionDate,
-          other: this.other,
-          scene: this.scene,
-          content: this.addCaseContent,
-          type_id: this.addSelected,
-          is_international: this.addRadio,
-          writer_id: localStorage.getItem('userID'),
-          img_path: this.imagArrs
-        }))
-        .then((response) => {
-          if (response.data.error) {
-            Dialog.alert({
-              title: '添加案例失败',
-              message: response.data.message
-            })
-          } else {
-            Dialog.alert({
-              title: '添加案例成功',
-              message: '案例' + this.addCaseTitle + '添加成功'
-            }).then(() => {
-              this.$router.go(0)
-            })
-          }
-        })
-      } else {
-        Dialog.alert({
-          title: '错误',
-          message: '请填写案例名'
-        })
-      }
     },
     deleteCase (id) {
       let url = '/lcase/' + id + '?access_token=' + localStorage.getItem('access_token')
@@ -874,7 +513,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="sass">
+<style lang="sass" scoped>
 .cateList
   .van-col-12
     margin-bottom: 10px
@@ -964,15 +603,6 @@ export default {
   font-size: 14px
   color: #777
 .addCase
-  .addCaseInfo
-    overflow-y: scroll
-    @media(max-width: 1199px)
-      width: 100% !important
-      height: 90% !important
-    @media(max-width: 759px)
-      width: 100% !important
-      height: 100% !important
-      padding-top: 0 !important
   .btnStyle
     margin-bottom: 20px
     margin-top: 20px

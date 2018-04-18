@@ -9,6 +9,7 @@ import Xiugai from '@/components/pages/Xiugai'
 import SignIn from '@/components/pages/SignIn'
 // import About from '@/components/pages/About'
 import Login from '@/components/pages/Login'
+import AddCase from '@/components/pages/AddCase'
 
 Vue.use(Router)
 
@@ -33,6 +34,15 @@ let router = new Router({
         requireAuth: true
       },
       component: [Login, SignIn]
+    },
+    {
+      path: '/addcase',
+      name: '添加案例',
+      meta: {
+        requireAuth: false,
+        title: '添加案例'
+      },
+      component: AddCase
     },
     {
       path: '/public',
